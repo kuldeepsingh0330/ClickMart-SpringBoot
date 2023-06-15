@@ -1,9 +1,37 @@
 package com.ransankul.clickmart.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Address {
 
-    int addressId;
-    String street,city,state,postalCode,Country;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "address_id")
+    private int addressId;
+
+    @Column(name = "street")
+    private String street;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "postal_code")
+    private String postalCode;
+
+    @Column(name = "country")
+    private String country;
+
+    public Address() {
+        // Default constructor required by Hibernate
+    }
 
     public Address(int addressId, String street, String city, String state, String postalCode, String country) {
         this.addressId = addressId;
@@ -11,7 +39,7 @@ public class Address {
         this.city = city;
         this.state = state;
         this.postalCode = postalCode;
-        Country = country;
+        this.country = country;
     }
 
     public int getAddressId() {
@@ -55,11 +83,11 @@ public class Address {
     }
 
     public String getCountry() {
-        return Country;
+        return country;
     }
 
     public void setCountry(String country) {
-        Country = country;
+        this.country = country;
     }
 
     

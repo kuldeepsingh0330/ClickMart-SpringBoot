@@ -1,17 +1,51 @@
 package com.ransankul.clickmart.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Category {
 
-    private int CategoryId;
-    private String name, color, brief, icon;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
+    private int categoryId;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "color")
+    private String color;
+
+    @Column(name = "brief")
+    private String brief;
+
+    @Column(name = "icon")
+    private String icon;
+
+    @Column(name = "priority")
     private int priority;
-    private long createdAt, lastUpdate;
+
+    @Column(name = "created_at")
+    private long createdAt;
+
+    @Column(name = "last_update")
+    private long lastUpdate;
+
+    @Column(name = "is_public")
     private boolean isPublic;
+
+    public Category() {
+        // Default constructor required by Hibernate
+    }
     
 
     public Category(int id, String name, String color, String brief, String icon, int priority, long createdAt,
             long lastUpdate, boolean isPublic) {
-        this.CategoryId = id;
+        this.categoryId = id;
         this.name = name;
         this.color = color;
         this.brief = brief;
@@ -23,11 +57,11 @@ public class Category {
     }
 
     public int getId() {
-        return CategoryId;
+        return categoryId;
     }
 
     public void setId(int id) {
-        this.CategoryId = id;
+        this.categoryId = id;
     }
 
     public String getName() {

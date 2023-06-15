@@ -2,29 +2,71 @@ package com.ransankul.clickmart.model;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+
+@Entity
 public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
+    private int productId;
+
+    @Column(name = "name")
     private String name;
-    private double price, discount;
-    private int quantity, id;
+
+    @Column(name = "price")
+    private double price;
+
+    @Column(name = "discount")
+    private double discount;
+
+    @Column(name = "quantity")
+    private int quantity;
+
+    @Column(name = "is_available")
     private boolean isAvailable;
+
+    @ElementCollection
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image")
     private ArrayList<String> images;
-    private int category; 
+
+    @Column(name = "category")
+    private int category;
+
+    public Product() {
+        // Default constructor required by Hibernate
+    }
 
 
-
-    public Product(String name, double price, double discount, int quantity, int id, boolean isAvailable,
+    public Product(int productId, String name, double price, double discount, int quantity, boolean isAvailable,
             ArrayList<String> images, int category) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.discount = discount;
         this.quantity = quantity;
-        this.id = id;
         this.isAvailable = isAvailable;
         this.images = images;
         this.category = category;
     }
 
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 
     public String getName() {
         return name;
@@ -50,12 +92,6 @@ public class Product {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
     public boolean isAvailable() {
         return isAvailable;
     }
@@ -78,9 +114,5 @@ public class Product {
     public void setCategory(int category) {
         this.category = category;
     }
-
-    
-    
-    
-    
+       
 }

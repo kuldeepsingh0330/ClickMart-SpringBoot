@@ -2,17 +2,53 @@ package com.ransankul.clickmart.model;
 
 import java.util.ArrayList;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+
+@Entity
 public class User {
 
-    int id,phoneNumber;
-    String name, password, emailId, profilePic;
-    String userName;
-    ArrayList<Address> userAddress;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private int userId;
+
+    @Column(name = "phone_number")
+    private int phoneNumber;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "email_id")
+    private String emailId;
+
+    @Column(name = "profile_pic")
+    private String profilePic;
+
+    @Column(name = "user_name")
+    private String userName;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private ArrayList<Address> userAddress;
+
+    public User() {
+        // Default constructor required by Hibernate
+    }
 
 
     public User(int id, int phoneNumber, String name, String password, String emailId, String profilePic,
             String userName, ArrayList<Address> userAddress) {
-        this.id = id;
+        this.userId = id;
         this.phoneNumber = phoneNumber;
         this.name = name;
         this.password = password;
@@ -24,12 +60,12 @@ public class User {
 
 
     public int getId() {
-        return id;
+        return userId;
     }
 
 
     public void setId(int id) {
-        this.id = id;
+        this.userId = id;
     }
 
 
