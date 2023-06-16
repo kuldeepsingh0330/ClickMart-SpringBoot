@@ -1,6 +1,6 @@
 package com.ransankul.clickmart.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -39,15 +39,25 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private ArrayList<Address> userAddress;
+    private List<Address> userAddress;
 
     public User() {
         // Default constructor required by Hibernate
     }
 
 
+    public int getUserId() {
+        return userId;
+    }
+
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+
     public User(int id, int phoneNumber, String name, String password, String emailId, String profilePic,
-            String userName, ArrayList<Address> userAddress) {
+            String userName, List<Address> userAddress) {
         this.userId = id;
         this.phoneNumber = phoneNumber;
         this.name = name;
@@ -129,12 +139,12 @@ public class User {
     }
 
 
-    public ArrayList<Address> getUserAddress() {
+    public List<Address> getUserAddress() {
         return userAddress;
     }
 
 
-    public void setUserAddress(ArrayList<Address> userAddress) {
+    public void setUserAddress(List<Address> userAddress) {
         this.userAddress = userAddress;
     }
 

@@ -11,7 +11,7 @@ public interface CategoryService {
     public List<Category> getAllCategory();
 
     //getCategoryByID
-    public Category getCategoryByID();
+    public Category getCategoryByID(int categoryId);
 
     //searchCategory
     public List<Category> searchCategory(String searchCategoryName); 
