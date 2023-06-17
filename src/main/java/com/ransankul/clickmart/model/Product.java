@@ -1,6 +1,7 @@
 package com.ransankul.clickmart.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -10,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Product {
@@ -37,10 +39,11 @@ public class Product {
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image")
-    private ArrayList<String> images;
+    private List<String> images;
 
-    @Column(name = "category")
-    private int category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Product() {
         // Default constructor required by Hibernate
@@ -48,7 +51,7 @@ public class Product {
 
 
     public Product(int productId, String name, double price, double discount, int quantity, boolean isAvailable,
-            ArrayList<String> images, int category) {
+            ArrayList<String> images, Category category) {
         this.productId = productId;
         this.name = name;
         this.price = price;
@@ -98,7 +101,7 @@ public class Product {
     public void setAvailable(boolean isAvailable) {
         this.isAvailable = isAvailable;
     }
-    public ArrayList<String> getImages() {
+    public List<String> getImages() {
         return images;
     }
     public void setImages(ArrayList<String> images) {
@@ -106,12 +109,12 @@ public class Product {
     }
 
 
-    public int getCategory() {
+    public Category getCategory() {
         return category;
     }
 
 
-    public void setCategory(int category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
        

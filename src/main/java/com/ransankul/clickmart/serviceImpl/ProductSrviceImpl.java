@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.model.Product;
 import com.ransankul.clickmart.repositery.ProductRepositery;
 import com.ransankul.clickmart.service.ProductService;
@@ -17,7 +18,7 @@ public class ProductSrviceImpl implements ProductService {
     private ProductRepositery productRepositery;
 
     @Override
-    public List<Product> getproductbyCategory(int categortId) {
+    public List<Product> getproductbyCategory(Category categortId) {
         return productRepositery.findBycategory(categortId);
     }
 
