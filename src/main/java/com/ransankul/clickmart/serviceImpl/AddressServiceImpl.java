@@ -1,11 +1,13 @@
 package com.ransankul.clickmart.serviceImpl;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ransankul.clickmart.model.Address;
+import com.ransankul.clickmart.model.User;
 import com.ransankul.clickmart.repositery.AddressRepositery;
 import com.ransankul.clickmart.service.AddressService;
 
@@ -20,6 +22,12 @@ public class AddressServiceImpl implements AddressService {
     public Address getAddressById(int addressId) {
         return addressRepositery.findById(addressId)
                 .orElseThrow(() -> new NoSuchElementException("Address not found with ID: " + addressId));
+    }
+
+
+    @Override
+    public List<Address> getAddressByUserId(User user) {
+        return addressRepositery.findByuser(user);
     }
     
 }

@@ -26,7 +26,6 @@ public class UserController {
     @PostMapping("/validate")
     public ResponseEntity<String> validateUser(@RequestParam String username, @RequestParam String password) {
         
-        System.out.println("-------------------------------------------+++");
         boolean isValid = userServiceImpl.valiateUser(username, password);
         if (isValid) {
             return ResponseEntity.ok("User is valid.");
