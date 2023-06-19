@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Address {
@@ -16,18 +17,23 @@ public class Address {
     @Column(name = "address_id")
     private int addressId;
 
+    @NotBlank(message = "Street is required")
     @Column(name = "street")
     private String street;
 
+    @NotBlank(message = "City is required")
     @Column(name = "city")
     private String city;
 
+    @NotBlank(message = "State is required")
     @Column(name = "state")
     private String state;
 
+    @NotBlank(message = "Postal code is required")
     @Column(name = "postal_code")
     private String postalCode;
 
+    @NotBlank(message = "Country is required")
     @Column(name = "country")
     private String country;
 

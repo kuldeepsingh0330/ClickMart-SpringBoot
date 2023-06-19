@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.service.CategoryService;
 
@@ -31,13 +32,15 @@ public class CategoryController {
         if (category != null) {
             return ResponseEntity.ok(category);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("No category found with this ID" + categoryId);
         }
     }
 
     @GetMapping("/search")
     public List<Category> searchCategory(@RequestParam("name") String searchCategoryName) {
-        return categoryService.searchCategory(searchCategoryName);
+        List<Category> list =  categoryService.searchCategory(searchCategoryName);
+        if(list.size()>0) return list;
+        else throw new ResourceNotFoundException("No category found with this name" + searchCategoryName);
     }
     
 }

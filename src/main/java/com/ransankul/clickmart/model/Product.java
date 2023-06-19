@@ -12,6 +12,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Product {
@@ -21,23 +26,30 @@ public class Product {
     @Column(name = "product_id")
     private int productId;
 
+    @NotBlank(message = "Name is required")
     @Column(name = "name")
     private String name;
 
+    @PositiveOrZero(message = "Price must be a positive or zero value")
     @Column(name = "price")
     private double price;
 
+    @PositiveOrZero(message = "Discount must be a positive or zero value")
+    @Max(value = 100, message = "Discount cannot exceed 100")
     @Column(name = "discount")
     private double discount;
 
+    @PositiveOrZero(message = "Quantity must be a positive or zero value")
     @Column(name = "quantity")
     private int quantity;
 
+    @NotNull(message = "Availability flag is required")
     @Column(name = "is_available")
     private boolean isAvailable;
 
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @NotEmpty(message = "At least one image is required")
     @Column(name = "image")
     private List<String> images;
 

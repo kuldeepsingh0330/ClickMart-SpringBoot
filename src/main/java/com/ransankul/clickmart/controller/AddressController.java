@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.model.Address;
 import com.ransankul.clickmart.model.User;
 import com.ransankul.clickmart.service.AddressService;
@@ -24,7 +25,7 @@ public class AddressController {
     public ResponseEntity<Address> getAddressById(@PathVariable int addressId) {
         Address address = addressService.getAddressById(addressId);
         if (address == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("No address found with this ID" + addressId);
         }
         return ResponseEntity.ok(address);
     }
@@ -35,7 +36,7 @@ public class AddressController {
         user.setId(userId);
         List<Address> addresses = addressService.getAddressByUserId(user);
         if (addresses.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("No address found with this userID" + userId);
         }
         return ResponseEntity.ok(addresses);
     }
