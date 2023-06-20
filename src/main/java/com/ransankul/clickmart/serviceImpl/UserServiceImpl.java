@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     public String uploadprofileImage(String path, MultipartFile file, String username) {
     try {
         String originalName = file.getOriginalFilename();
+        if(originalName == null) return null;
         String randomId = UUID.randomUUID().toString();
         String finalName = randomId + originalName.substring(originalName.lastIndexOf("."));
 
