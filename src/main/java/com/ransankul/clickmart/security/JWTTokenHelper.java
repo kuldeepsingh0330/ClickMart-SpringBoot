@@ -30,14 +30,14 @@ public class JWTTokenHelper {
 
     private String createToken(Map<String, Object> claims, String subject) {
         Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + expirationMs);
+        Date expirationDate = new Date(now.getTime() + expirationMs*1000);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 

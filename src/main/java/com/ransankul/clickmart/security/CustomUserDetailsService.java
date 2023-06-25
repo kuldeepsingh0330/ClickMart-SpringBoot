@@ -26,7 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new ResourceNotFoundException("User not found with thid username "+username); 
         }   
 
-
         return user;
     }
 }

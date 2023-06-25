@@ -7,6 +7,5 @@ import com.ransankul.clickmart.model.User;
 public interface UserRepositery extends JpaRepository<User, Integer>  {
     
     public User findByUserName(String username);
-
     
 }
