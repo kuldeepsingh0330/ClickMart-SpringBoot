@@ -29,5 +29,37 @@ public class AddressServiceImpl implements AddressService {
     public List<Address> getAddressByUserId(User user) {
         return addressRepositery.findByuser(user);
     }
+
+
+	@Override
+	public Address addAddress(Address address) {
+		Address add =  addressRepositery.save(address);
+		return add;
+	}
+
+
+	@Override
+	public void removeAddress(int id) {
+		Address address= addressRepositery.findById(id).get();
+		
+		
+        if (address == null) {
+            throw new IllegalArgumentException("address does not exist");
+        }else {
+        	addressRepositery.delete(address);;        	
+        }
+	}
+
+
+	@Override
+	public Address updateAddress(Address address) {
+		Address add = addressRepositery.findById(address.getAddressId()).get();
+		
+        if (add == null) {
+            throw new IllegalArgumentException("address does not exist");
+        }else {
+        	return addressRepositery.save(address);      	
+        }
+	}
     
 }

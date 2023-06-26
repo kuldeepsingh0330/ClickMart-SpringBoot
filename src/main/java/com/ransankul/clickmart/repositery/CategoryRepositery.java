@@ -10,4 +10,6 @@ public interface CategoryRepositery extends JpaRepository<Category, Integer>{
 
     public List<Category> findBynameContainingIgnoreCase(String name);
     
+    public boolean existsByName(String name);
+    
 }

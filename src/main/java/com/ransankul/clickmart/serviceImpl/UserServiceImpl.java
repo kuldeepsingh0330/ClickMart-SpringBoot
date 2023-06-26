@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ransankul.clickmart.model.Roles;
 import com.ransankul.clickmart.model.User;
 import com.ransankul.clickmart.repositery.UserRepositery;
 import com.ransankul.clickmart.service.UserService;
@@ -23,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
+    	Set<Roles> set = new HashSet<>();
+    	set.add(new Roles(2,"ROLE_NORMAL_USER"));
+    	user.setRoles(set);
         User createdUser = userRepositery.save(user);
         return createdUser;
     }

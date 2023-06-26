@@ -12,5 +12,11 @@ public interface AddressService {
 
     //getAddressByUserId
     public List<Address> getAddressByUserId(User user);
+    
+    public Address addAddress(Address Address);
+    
+    public void removeAddress(int id);
+
+    public Address updateAddress(Address address);
 
 }

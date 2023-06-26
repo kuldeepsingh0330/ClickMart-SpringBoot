@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.security.CustomUserDetailsService;
@@ -25,6 +26,7 @@ import com.ransankul.clickmart.security.JWTauthEntryPoint;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 public class SecurityConfig implements AuthenticationProvider {
 
 
@@ -37,12 +39,16 @@ public class SecurityConfig implements AuthenticationProvider {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    private static final String[] PUBLIC_URL = {
+        "/auth/**","/v3/api-docs","/v2/api-docs","/swagger-resources/**","/swagger-ui/**","webjars/**"
+    };
+
 
     @Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    
 	    http.csrf(csrf-> csrf.disable()).cors(cors-> cors.disable())
-        .authorizeHttpRequests(auth-> auth.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
+        .authorizeHttpRequests(auth-> auth.requestMatchers(PUBLIC_URL).permitAll().anyRequest().authenticated())
         .exceptionHandling(ex->ex.authenticationEntryPoint(jwTauthEntryPoint))
         .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

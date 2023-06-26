@@ -26,6 +26,8 @@ import jakarta.persistence.OneToMany;
 public class User implements UserDetails{
 
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
