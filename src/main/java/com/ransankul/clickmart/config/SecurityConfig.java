@@ -3,6 +3,7 @@ package com.ransankul.clickmart.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,6 +42,7 @@ public class SecurityConfig implements AuthenticationProvider {
 
     private static final String[] PUBLIC_URL = {
         "/auth/**","/v3/api-docs","/v2/api-docs","/swagger-resources/**","/swagger-ui/**","webjars/**"
+        ,"/register","/validate"
     };
 
 
@@ -48,7 +50,11 @@ public class SecurityConfig implements AuthenticationProvider {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    
 	    http.csrf(csrf-> csrf.disable()).cors(cors-> cors.disable())
-        .authorizeHttpRequests(auth-> auth.requestMatchers(PUBLIC_URL).permitAll().anyRequest().authenticated())
+        .authorizeHttpRequests(auth-> auth
+        		.requestMatchers(HttpMethod.GET).permitAll()
+//        		.requestMatchers("/admin/**").hasRole("ROLE_ADMIN_USER")
+        		.requestMatchers(PUBLIC_URL).permitAll()
+        		.anyRequest().authenticated())
         .exceptionHandling(ex->ex.authenticationEntryPoint(jwTauthEntryPoint))
         .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

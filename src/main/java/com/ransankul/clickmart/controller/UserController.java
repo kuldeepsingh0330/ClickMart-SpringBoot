@@ -42,11 +42,13 @@ public class UserController {
 
     @PostMapping("/validate")
     public ResponseEntity<String> validateUser(@RequestParam String username, @RequestParam String password) {
-        
+//        System.out.println("-------------------------------------------------1");
         boolean isValid = userServiceImpl.valiateUser(username, password);
         if (isValid) {
+//        	 System.out.println("-------------------------------------------------2");
             return ResponseEntity.ok("User is valid.");
-        } else {
+        } else { 
+//        	System.out.println("-------------------------------------------------3");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
         }
     }

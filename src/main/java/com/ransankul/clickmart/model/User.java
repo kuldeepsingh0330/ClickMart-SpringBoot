@@ -34,7 +34,7 @@ public class User implements UserDetails{
     private int userId;
 
     @Column(name = "phone_number")
-    private int phoneNumber;
+    private Long phoneNumber;
 
     @Column(name = "name")
     private String name;
@@ -87,7 +87,7 @@ public class User implements UserDetails{
     }
 
 
-    public User(int id, int phoneNumber, String name, String password, String emailId, String profilePic,
+    public User(int id, Long phoneNumber, String name, String password, String emailId, String profilePic,
             String userName, List<Address> userAddress) {
         this.userId = id;
         this.phoneNumber = phoneNumber;
@@ -110,12 +110,12 @@ public class User implements UserDetails{
     }
 
 
-    public int getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
