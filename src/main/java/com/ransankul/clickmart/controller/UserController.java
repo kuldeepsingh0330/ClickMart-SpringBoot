@@ -36,19 +36,19 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
+    	System.out.println("/register "+user.getName());
+    	
         User createdUser = userServiceImpl.registerUser(user);
+        System.out.println(createdUser.toString());
         return ResponseEntity.ok("User registered successfully with ID: " + createdUser.getId());
     }
 
     @PostMapping("/validate")
     public ResponseEntity<String> validateUser(@RequestParam String username, @RequestParam String password) {
-//        System.out.println("-------------------------------------------------1");
         boolean isValid = userServiceImpl.valiateUser(username, password);
         if (isValid) {
-//        	 System.out.println("-------------------------------------------------2");
             return ResponseEntity.ok("User is valid.");
-        } else { 
-//        	System.out.println("-------------------------------------------------3");
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
         }
     }

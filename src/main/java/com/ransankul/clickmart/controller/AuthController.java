@@ -12,9 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ransankul.clickmart.model.JwtRequest;
+import com.ransankul.clickmart.model.TokenResponse;
 import com.ransankul.clickmart.security.JWTAuthResponse;
 import com.ransankul.clickmart.security.JWTTokenHelper;
 
@@ -33,15 +34,15 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<JWTAuthResponse> login(@RequestBody JwtRequest request){
+    public ResponseEntity<TokenResponse> login(@RequestParam String username, @RequestParam String password){
 
-        this.doAuthenticate(request.getUsername(), request.getPassword());
+        this.doAuthenticate(username,password);
         
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         String token = this.jwtTokenHelper.generateToken(userDetails);
-        JWTAuthResponse response = new JWTAuthResponse(token,userDetails.getUsername());
-
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        String response = new JWTAuthResponse(token,userDetails.getUsername()).toString();
+        
+        return new ResponseEntity<>(new TokenResponse(response,"Login succesfully"),HttpStatus.OK);
     }
 
 

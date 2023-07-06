@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
+    	System.out.println("registeruser");
     	Set<Roles> set = new HashSet<>();
     	set.add(new Roles(2,"ROLE_NORMAL_USER"));
     	user.setRoles(set);
