@@ -48,8 +48,7 @@ public class RecentOfferController {
     	String folderPath = path+File.separator+"recentOfferImages";
         Path imagePath = Paths.get(folderPath).resolve(imageName);
         Resource imageResource = new UrlResource(imagePath.toUri());
-        System.out.println(imagePath);
-
+        
         if (imageResource.exists() && imageResource.isReadable()) {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG); 

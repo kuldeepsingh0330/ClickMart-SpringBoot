@@ -24,6 +24,8 @@ import com.ransankul.clickmart.security.CustomUserDetailsService;
 import com.ransankul.clickmart.security.JWTAuthFilter;
 import com.ransankul.clickmart.security.JWTauthEntryPoint;
 
+import okhttp3.Request;
+
 
 @Configuration
 @EnableWebSecurity
@@ -52,7 +54,7 @@ public class SecurityConfig implements AuthenticationProvider {
 	    http.csrf(csrf-> csrf.disable()).cors(cors-> cors.disable())
         .authorizeHttpRequests(auth-> auth
         		.requestMatchers(HttpMethod.GET).permitAll()
-//        		.requestMatchers("/admin/**").hasRole("ROLE_ADMIN_USER")
+        		.requestMatchers("/admin/**").authenticated()
         		.requestMatchers(PUBLIC_URL).permitAll()
         		.anyRequest().authenticated())
         .exceptionHandling(ex->ex.authenticationEntryPoint(jwTauthEntryPoint))

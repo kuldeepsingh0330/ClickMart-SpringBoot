@@ -1,5 +1,6 @@
 package com.ransankul.clickmart.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,7 +58,7 @@ public class CategoryController {
     
     @GetMapping("/category_image/{categoryImage}")
     public ResponseEntity<Resource> serveImage(@PathVariable String categoryImage) throws IOException {
-        String folderPath = path;
+        String folderPath = path+File.separator+"categoryImage";
         Path imagePath = Paths.get(folderPath).resolve(categoryImage);
         Resource imageResource = new UrlResource(imagePath.toUri());
 

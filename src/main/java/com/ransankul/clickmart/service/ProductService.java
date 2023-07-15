@@ -19,4 +19,6 @@ public interface ProductService {
     //searchProductByName
     public List<Product> searchProductByName(String name);
     
+    public String displayImage(int id);
+    
 }

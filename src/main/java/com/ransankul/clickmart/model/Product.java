@@ -29,6 +29,10 @@ public class Product {
     @NotBlank(message = "Name is required")
     @Column(name = "name")
     private String name;
+    
+    @NotBlank(message = "Description is required")
+    @Column(name = "description")
+    private String description;
 
     @PositiveOrZero(message = "Price must be a positive or zero value")
     @Column(name = "price")
@@ -119,9 +123,25 @@ public class Product {
     public void setImages(ArrayList<String> images) {
         this.images = images;
     }
+    
 
 
-    public Category getCategory() {
+    public String getDescription() {
+		return description;
+	}
+
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+	public void setImages(List<String> images) {
+		this.images = images;
+	}
+
+
+	public Category getCategory() {
         return category;
     }
 

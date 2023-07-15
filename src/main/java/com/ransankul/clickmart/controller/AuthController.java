@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ransankul.clickmart.model.TokenResponse;
 import com.ransankul.clickmart.security.JWTAuthResponse;
 import com.ransankul.clickmart.security.JWTTokenHelper;
 
@@ -34,15 +33,15 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestParam String username, @RequestParam String password){
+    public ResponseEntity<JWTAuthResponse> login(@RequestParam String username, @RequestParam String password){
 
         this.doAuthenticate(username,password);
         
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         String token = this.jwtTokenHelper.generateToken(userDetails);
-        String response = new JWTAuthResponse(token,userDetails.getUsername()).toString();
+        JWTAuthResponse response = new JWTAuthResponse(token,userDetails.getUsername(),"Login succesfully");
         
-        return new ResponseEntity<>(new TokenResponse(response,"Login succesfully"),HttpStatus.OK);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 

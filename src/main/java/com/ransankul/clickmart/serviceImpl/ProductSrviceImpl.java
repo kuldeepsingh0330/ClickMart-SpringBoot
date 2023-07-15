@@ -38,5 +38,11 @@ public class ProductSrviceImpl implements ProductService {
     public List<Product> searchProductByName(String name) {
         return productRepositery.findBynameContainingIgnoreCase(name);
     }
+
+	@Override
+	public String displayImage(int id) {
+		List<String> list = this.productRepositery.getImagesByProductId(id);
+		return list.get(0);
+	}
     
 }

@@ -1,0 +1,59 @@
+package com.ransankul.clickmart.serviceImpl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.ransankul.clickmart.model.User;
+import com.ransankul.clickmart.model.Wishlist;
+import com.ransankul.clickmart.repositery.WishlistRepositery;
+import com.ransankul.clickmart.service.WishlistService;
+
+@Service
+public class WishlistServiceImpl implements WishlistService{
+	
+	@Autowired
+	private WishlistRepositery wishlistRepositery;
+
+	@Override
+	public Wishlist addProductToWishlist(Wishlist wishlist) {
+		Wishlist w = wishlistRepositery.save(wishlist);
+		return w;
+	}
+
+	@Override
+	public void removeProductToWishlist(int id) {
+		Wishlist w = new Wishlist();
+		w.setId(id);
+		wishlistRepositery.delete(w);		
+	}
+
+	@Override
+	public Wishlist getById(int id) {
+		return wishlistRepositery.findById(id).get();
+	}
+
+	@Override
+	public List<Wishlist> getAllWishlistProduct(int userId) {
+		User user = new User();
+		user.setId(userId);
+		return wishlistRepositery.findByUser(user);
+	}
+
+	@Override
+	public boolean isProductintoWishList(int userId, int productId) {
+		User user = new User();
+		user.setId(userId);
+		List<Wishlist> l = wishlistRepositery.isProductintoWishList(productId, user);
+		return l.isEmpty()?false:true;
+	}
+
+	@Override
+	public int getWishListId(int userId, int productId) {
+		User user = new User();
+		user.setId(userId);
+		return wishlistRepositery.isProductintoWishList(productId, user).get(0).getId();
+	}
+
+}

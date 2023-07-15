@@ -11,6 +11,8 @@ public interface AddressRepositery extends JpaRepository<Address, Integer> {
 
 
     public List<Address> findByuser(User user);
+    
+    public List<Address> findByAddressId(int addressId);
 
         
 }

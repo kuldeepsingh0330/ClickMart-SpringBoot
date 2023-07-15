@@ -20,8 +20,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address getAddressById(int addressId) {
-        return addressRepositery.findById(addressId)
-                .orElseThrow(() -> new NoSuchElementException("Address not found with ID: " + addressId));
+        return addressRepositery.findByAddressId(addressId).get(0);
     }
 
 

@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.razorpay.Order;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -54,6 +57,14 @@ public class User implements UserDetails{
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Address> userAddress;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Wishlist> wishlist;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Transaction> orderHistory;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -61,6 +72,8 @@ public class User implements UserDetails{
     inverseJoinColumns = @JoinColumn(name="role",referencedColumnName = "id")
     )
     private Set<Roles> roles = new HashSet<>();
+    
+    
 
     public Set<Roles> getRoles() {
         return roles;

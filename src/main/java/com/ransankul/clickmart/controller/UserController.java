@@ -35,11 +35,8 @@ public class UserController {
     private String path;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
-    	System.out.println("/register "+user.getName());
-    	
+    public ResponseEntity<String> registerUser(@RequestBody User user) {    	
         User createdUser = userServiceImpl.registerUser(user);
-        System.out.println(createdUser.toString());
         return ResponseEntity.ok("User registered successfully with ID: " + createdUser.getId());
     }
 
