@@ -40,7 +40,7 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    
     public Address() {
         // Default constructor required by Hibernate
     }

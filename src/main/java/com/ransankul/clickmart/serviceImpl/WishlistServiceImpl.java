@@ -3,6 +3,8 @@ package com.ransankul.clickmart.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ransankul.clickmart.model.User;
@@ -35,10 +37,11 @@ public class WishlistServiceImpl implements WishlistService{
 	}
 
 	@Override
-	public List<Wishlist> getAllWishlistProduct(int userId) {
+	public List<Wishlist> getAllWishlistProduct(int userId,String pageNumber) {
 		User user = new User();
 		user.setId(userId);
-		return wishlistRepositery.findByUser(user);
+		Pageable p = PageRequest.of(Integer.parseInt(pageNumber), 20);
+		return wishlistRepositery.findByUser(user,p);
 	}
 
 	@Override

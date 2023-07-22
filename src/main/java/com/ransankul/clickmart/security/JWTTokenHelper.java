@@ -21,7 +21,7 @@ public class JWTTokenHelper {
     private String secret;
 
     @Value("${jwt.expirationMs}")
-    private int expirationMs;
+    private long expirationMs;
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -63,7 +63,7 @@ public class JWTTokenHelper {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         final Date expiration = extractExpirationDate(token);
         return expiration.before(new Date());
     }

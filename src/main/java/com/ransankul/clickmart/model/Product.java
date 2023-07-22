@@ -7,10 +7,13 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -60,6 +63,9 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+    
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "orderedProduct")
+    private List<Transaction> orderedProduct = new ArrayList<>();
 
     public Product() {
         // Default constructor required by Hibernate
@@ -77,7 +83,7 @@ public class Product {
         this.images = images;
         this.category = category;
     }
-
+   
 
     public int getProductId() {
         return productId;
@@ -120,13 +126,23 @@ public class Product {
     public List<String> getImages() {
         return images;
     }
-    public void setImages(ArrayList<String> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
     
+    
+    
 
 
-    public String getDescription() {
+    @Override
+	public String toString() {
+		return "Product [productId=" + productId + ", name=" + name + ", description=" + description + ", price="
+				+ price + ", discount=" + discount + ", quantity=" + quantity + ", isAvailable=" + isAvailable
+				+ ", images=" + images + ", category=" + category + ", orderedProduct=" + orderedProduct + "]";
+	}
+
+
+	public String getDescription() {
 		return description;
 	}
 
@@ -135,10 +151,6 @@ public class Product {
 		this.description = description;
 	}
 
-
-	public void setImages(List<String> images) {
-		this.images = images;
-	}
 
 
 	public Category getCategory() {

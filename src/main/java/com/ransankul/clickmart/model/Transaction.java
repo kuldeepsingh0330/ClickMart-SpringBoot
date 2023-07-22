@@ -1,15 +1,26 @@
 package com.ransankul.clickmart.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "transaction")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +38,73 @@ public class Transaction {
     private String offer_id;
     private String status;
     private int attempts;
+    private int addressId;
+    private String paymentId;
+    
+    
+    
+    public String getOrder_id() {
+		return order_id;
+	}
 
-    // Default constructor (required by Hibernate)
+
+
+	public void setOrder_id(String order_id) {
+		this.order_id = order_id;
+	}
+
+
+
+	public String getPaymentId() {
+		return paymentId;
+	}
+
+
+
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+
+
+
+	@ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "ordered_product",
+    joinColumns=@JoinColumn(name="transaction",referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name="product",referencedColumnName = "product_id")
+    )
+    private List<Product> orderedProduct = new ArrayList<>();
+    
+
+    public User getUser() {
+		return user;
+	}
+
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
+
+	public List<Product> getOrderedProduct() {
+		return orderedProduct;
+	}
+
+
+
+	public void setOrderedProduct(List<Product> orderedProduct) {
+		this.orderedProduct = orderedProduct;
+	}
+
+
+
+	// Default constructor (required by Hibernate)
     public Transaction() {
     }
     
@@ -150,5 +226,19 @@ public class Transaction {
     public void setAttempts(int attempts) {
         this.attempts = attempts;
     }
+
+
+
+	public int getAddress() {
+		return addressId;
+	}
+
+
+
+	public void setAddress(int address) {
+		this.addressId = address;
+	}   
+	
+    
 }
 

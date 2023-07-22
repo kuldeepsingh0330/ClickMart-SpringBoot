@@ -11,11 +11,11 @@ public interface AddressService {
     public Address getAddressById(int addressId);
 
     //getAddressByUserId
-    public List<Address> getAddressByUserId(User user);
+    public List<Address> getAddressByUserId(User user,String pageNumber);
     
     public Address addAddress(Address Address);
     
-    public void removeAddress(int id);
+    public boolean removeAddress(int id, int userid);
 
     public Address updateAddress(Address address);
 

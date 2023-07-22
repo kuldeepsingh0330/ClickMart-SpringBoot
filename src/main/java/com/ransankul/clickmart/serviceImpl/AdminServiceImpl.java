@@ -1,5 +1,7 @@
 package com.ransankul.clickmart.serviceImpl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ public class AdminServiceImpl implements AdminService {
         if (categoryRepositery.existsByName(category.getName())) {
             throw new IllegalArgumentException("Category with the same name already exists");
         }else {
+        	category.setCreatedAt(System.currentTimeMillis());
+        	category.setLastUpdate(System.currentTimeMillis());
+        	category.setId(0);
         	return categoryRepositery.save(category);        	
         }	
 	}

@@ -44,49 +44,86 @@ public class AddressController {
     private JWTTokenHelper jwtTokenHelper;
     
     @PostMapping("/")
-    public ResponseEntity<?> addAddress(@Valid @RequestBody Address address) {
-        Address addedAddress = addressService.addAddress(address);
-        if(addedAddress != null) {
-        	APIResponse<Address> apires = new APIResponse<Address>("201",addedAddress,"Address added succesfully");
-        	return new ResponseEntity<>(apires, HttpStatus.CREATED);
-        }
-        else
-        	return new ResponseEntity(new APIResponse<>("500",null,"Something went wrong"),HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @DeleteMapping("/{addressId}")
-    public ResponseEntity<String> removeAddress(@PathVariable int addressId) {
-        addressService.removeAddress(addressId);
-        return new ResponseEntity<>("Address removed successfully", HttpStatus.OK);
-    }
-
-    @PutMapping("/updateAddress")
-    public ResponseEntity<APIResponse<Address>> updateAddress(@Valid @RequestBody Address address) {
-//    	if(address.getUser() == null) {
-//            return new ResponseEntity<>("Invalid request please add user Id also with request", HttpStatus.BAD_REQUEST);    		
-//    	}
-    	addressService.updateAddress(address);
-        return new ResponseEntity<APIResponse<Address>>(new APIResponse<>("201",null,"updated succesfully"),HttpStatus.CREATED);
-    }
-    
-    @PostMapping("/{addressId}")
-    public ResponseEntity<AddressResponse> getAddressById(@PathVariable int addressId) {
-        Address ad = addressService.getAddressById(addressId);
-        AddressResponse addressResponse = new AddressResponse(ad.getAddressId(),
-				ad.getStreet(),ad.getCity(),ad.getState(),ad.getPostalCode(),ad.getCountry());
-	        	
-        return ResponseEntity.ok(addressResponse);
-    }
-    
-    @PostMapping("/allAddress")
-    public ResponseEntity<APIResponse<List<AddressResponse>>> getAddressByUserId(HttpServletRequest request) {
+    public ResponseEntity<APIResponse<AddressResponse>> addAddress(@Valid @RequestBody Address address, HttpServletRequest request) {
     	
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             String userName = jwtTokenHelper.extractUsername(token);
         	User user = userService.finduserByUsername(userName);
-            List<Address> addresses = addressService.getAddressByUserId(user);
+        	address.setUser(user);
+            Address ad = addressService.addAddress(address);
+            AddressResponse response = new AddressResponse(ad.getAddressId(),
+    				ad.getStreet(),ad.getCity(),ad.getState(),
+    				ad.getPostalCode(),ad.getCountry());
+            
+            APIResponse<AddressResponse> apires = new APIResponse<>("201",response,"Address added succesfully");
+            return new ResponseEntity<>(apires, HttpStatus.CREATED);
+        	
+        }else {
+        	return new ResponseEntity<>(new APIResponse<>("400",null,"Headers is missing") ,HttpStatus.BAD_REQUEST);        	
+        }
+    	
+
+    }
+
+    @DeleteMapping("/{addressId}")
+    public ResponseEntity<APIResponse<String>> removeAddress(@PathVariable int addressId, HttpServletRequest request) {
+    	
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            String userName = jwtTokenHelper.extractUsername(token);
+        	User user = userService.finduserByUsername(userName);
+        	
+            boolean b = addressService.removeAddress(addressId,user.getId());
+            
+            if(b) {            
+            	APIResponse<String> apires = new APIResponse<>("201",null,"Address removed successfully");
+            	return new ResponseEntity<>(apires, HttpStatus.CREATED);
+            }else {
+            	APIResponse<String> apires = new APIResponse<>("400",null,"Address doesn't exist");
+            	return new ResponseEntity<>(apires, HttpStatus.BAD_REQUEST);
+            }
+        }else {
+        	return new ResponseEntity<>(new APIResponse<>("400",null,"Headers is missing") ,HttpStatus.BAD_REQUEST);        	
+        }
+    }
+
+    @PutMapping("/updateAddress")
+    public ResponseEntity<APIResponse<AddressResponse>> updateAddress(@Valid @RequestBody Address address, HttpServletRequest request) {
+    	
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            String userName = jwtTokenHelper.extractUsername(token);
+        	User user = userService.finduserByUsername(userName);
+        	address.setUser(user);
+        	Address ad = addressService.updateAddress(address);
+            AddressResponse response = new AddressResponse(ad.getAddressId(),
+    				ad.getStreet(),ad.getCity(),ad.getState(),
+    				ad.getPostalCode(),ad.getCountry());
+            
+            APIResponse<AddressResponse> apires = new APIResponse<>("201",response,"Address updated succesfully");
+            return new ResponseEntity<>(apires, HttpStatus.CREATED);
+        	
+        }else {
+        	return new ResponseEntity<>(new APIResponse<>("400",null,"Headers is missing") ,HttpStatus.BAD_REQUEST);        	
+        }
+        
+    }
+
+    
+    @PostMapping("/allAddress/{pageNumber}")
+    public ResponseEntity<APIResponse<List<AddressResponse>>> getAddressByUserId(@PathVariable String pageNumber,HttpServletRequest request) {
+    	
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            String userName = jwtTokenHelper.extractUsername(token);
+        	User user = userService.finduserByUsername(userName);
+            List<Address> addresses = addressService.getAddressByUserId(user,pageNumber);
+            
             if(addresses.size()>0) {
             	List<AddressResponse> addressesPayload = new ArrayList<>();
             	for(Address ad : addresses) {

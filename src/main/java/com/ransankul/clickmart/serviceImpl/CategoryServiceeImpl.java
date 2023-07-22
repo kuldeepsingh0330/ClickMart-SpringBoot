@@ -18,7 +18,7 @@ public class CategoryServiceeImpl implements CategoryService {
     
     @Override
     public List<Category> getAllCategory() {
-        return categoryRepositery.findAll();
+        return categoryRepositery.getAllCategoryUser();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ransankul.clickmart.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -71,11 +72,28 @@ public class User implements UserDetails{
     joinColumns=@JoinColumn(name="user",referencedColumnName = "user_id"),
     inverseJoinColumns = @JoinColumn(name="role",referencedColumnName = "id")
     )
-    private Set<Roles> roles = new HashSet<>();
-    
-    
+    private Set<Roles> roles = new HashSet<>();    
 
-    public Set<Roles> getRoles() {
+    public List<Wishlist> getWishlist() {
+		return wishlist;
+	}
+
+
+	public void setWishlist(List<Wishlist> wishlist) {
+		this.wishlist = wishlist;
+	}
+
+
+	public List<Transaction> getOrderHistory() {
+		return orderHistory;
+	}
+
+
+	public void setOrderHistory(List<Transaction> orderHistory) {
+		this.orderHistory = orderHistory;
+	}
+
+	public Set<Roles> getRoles() {
         return roles;
     }
 

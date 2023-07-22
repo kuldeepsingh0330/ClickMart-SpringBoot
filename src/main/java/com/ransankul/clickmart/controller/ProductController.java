@@ -77,17 +77,17 @@ public class ProductController {
             throw new ResourceNotFoundException("No product found with this ID" + productId);
     }
 
-    @GetMapping("/all")
-    public List<Product> getAllProducts() {
-        List<Product> list =  productService.getAllProduct();
+    @GetMapping("/all/{pageNumber}")
+    public List<Product> getAllProducts(@PathVariable(required = false)String pageNumber) {
+        List<Product> list =  productService.getAllProduct(pageNumber);
         if(list.size()>0) return list;
         else 
             throw new ResourceNotFoundException("No product found");
     }
     
-    @GetMapping("/search")
-    public List<Product> searchProductByName(@RequestParam String name) {
-        List<Product> list =  productService.searchProductByName(name);
+    @GetMapping("/search/{pageNumber}")
+    public List<Product> searchProductByName(@RequestParam String name,@PathVariable String pageNumber) {
+        List<Product> list =  productService.searchProductByName(name,pageNumber);
         System.out.println(list.size()+" "+name);
         if(list.size()>0) return list;
         else 
@@ -151,7 +151,7 @@ public class ProductController {
     }
     
     @PostMapping("wishlist/remove/{id}")
-    public ResponseEntity<APIResponse<String>> addProductTOWishlist(@PathVariable int id, HttpServletRequest request) {
+    public ResponseEntity<APIResponse<String>> removeeProductTOWishlist(@PathVariable int id, HttpServletRequest request) {
 
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -167,15 +167,15 @@ public class ProductController {
         }
     }
     
-    @PostMapping("wishlist/all")
-    public ResponseEntity<APIResponse<List<Product>>> getAllWishlistProduct(HttpServletRequest request) {
+    @PostMapping("wishlist/all/{pageNumber}")
+    public ResponseEntity<APIResponse<List<Product>>> getAllWishlistProduct(@PathVariable String pageNumber, HttpServletRequest request) {
 
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             String userName = jwtTokenHelper.extractUsername(token);
         	User user = userService.finduserByUsername(userName);
-        	List<Wishlist> w = wishlistService.getAllWishlistProduct(user.getId());
+        	List<Wishlist> w = wishlistService.getAllWishlistProduct(user.getId(),pageNumber);
         	List<Product> p = new ArrayList<>();
         	for(Wishlist wl : w) {
         		p.add(productService.getProductById(wl.getProductId()));

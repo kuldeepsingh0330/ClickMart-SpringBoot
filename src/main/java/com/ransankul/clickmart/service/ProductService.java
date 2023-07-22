@@ -14,10 +14,10 @@ public interface ProductService {
     public Product getProductById(int productId);
     
     //getAllProduct
-    public List<Product> getAllProduct();
+    public List<Product> getAllProduct(String pageNumber);
 
     //searchProductByName
-    public List<Product> searchProductByName(String name);
+    public List<Product> searchProductByName(String name, String pageNumber);
     
     public String displayImage(int id);
     

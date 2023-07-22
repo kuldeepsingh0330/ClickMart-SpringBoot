@@ -12,7 +12,7 @@ public interface WishlistService {
 	
 	public Wishlist getById(int id);
 	
-	public List<Wishlist> getAllWishlistProduct(int userId);
+	public List<Wishlist> getAllWishlistProduct(int userId,String pageNumber);
 	
 	public boolean isProductintoWishList(int userId,int productId);
 	

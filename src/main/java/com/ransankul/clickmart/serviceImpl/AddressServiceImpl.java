@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ransankul.clickmart.model.Address;
@@ -25,8 +27,9 @@ public class AddressServiceImpl implements AddressService {
 
 
     @Override
-    public List<Address> getAddressByUserId(User user) {
-        return addressRepositery.findByuser(user);
+    public List<Address> getAddressByUserId(User user,String pageNumber) {
+    	Pageable p = PageRequest.of(Integer.parseInt(pageNumber), 7);
+        return addressRepositery.findByuser(user,p);
     }
 
 
@@ -38,15 +41,17 @@ public class AddressServiceImpl implements AddressService {
 
 
 	@Override
-	public void removeAddress(int id) {
+	public boolean removeAddress(int id, int userid) {
 		Address address= addressRepositery.findById(id).get();
 		
 		
         if (address == null) {
-            throw new IllegalArgumentException("address does not exist");
-        }else {
-        	addressRepositery.delete(address);;        	
+        	return false;
+        }else if(address.getUser().getId() == userid){
+        	addressRepositery.delete(address);  
+        	return true;
         }
+        return false;
 	}
 
 

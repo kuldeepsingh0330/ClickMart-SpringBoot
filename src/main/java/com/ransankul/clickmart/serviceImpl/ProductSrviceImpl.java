@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ransankul.clickmart.model.Category;
@@ -30,13 +32,15 @@ public class ProductSrviceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProduct() {
-        return productRepositery .findAll();
+    public List<Product> getAllProduct(String pageNumber) {
+    	Pageable p = PageRequest.of(Integer.parseInt(pageNumber), 20);
+        return productRepositery .findAll(p).getContent();
     }
 
     @Override
-    public List<Product> searchProductByName(String name) {
-        return productRepositery.findBynameContainingIgnoreCase(name);
+    public List<Product> searchProductByName(String name, String pageNumber) {
+    	Pageable p = PageRequest.of(Integer.parseInt(pageNumber), 20);    	
+        return productRepositery.findBynameContainingIgnoreCase(name,p);
     }
 
 	@Override

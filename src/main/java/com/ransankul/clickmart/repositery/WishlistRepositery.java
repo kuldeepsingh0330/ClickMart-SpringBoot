@@ -2,6 +2,8 @@ package com.ransankul.clickmart.repositery;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,7 +12,7 @@ import com.ransankul.clickmart.model.Wishlist;
 
 public interface WishlistRepositery extends JpaRepository<Wishlist, Integer>{
 	
-	public List<Wishlist> findByUser(User user);
+	public List<Wishlist> findByUser(User user,Pageable p);
 	
     @Query("SELECT w FROM Wishlist w WHERE w.user = :userId and w.productId = :productId")
     List<Wishlist> isProductintoWishList(int productId, User userId);
