@@ -1,8 +1,10 @@
 package com.ransankul.clickmart.serviceImpl;
 
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ransankul.clickmart.model.Category;
@@ -19,6 +21,12 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private ProductRepositery productRepositery;
+
+	@Override
+	public List<Category> getCategory(int pageNumber) {
+		Pageable p = PageRequest.of(pageNumber,20);
+		return categoryRepositery.findAll(p).getContent();
+	}
 
 	@Override
 	public Category addCategory(Category category) {
@@ -57,10 +65,15 @@ public class AdminServiceImpl implements AdminService {
         	categoryRepositery.save(cat);        	
         }	
 	}
+
+	@Override
+	public List<Product> getProduct(int pageNumber) {
+		Pageable p = PageRequest.of(pageNumber,20);
+		return productRepositery.findAll(p).getContent();
+	}
 	
 	@Override
     public Product addProduct(Product product) {
-		
 		return productRepositery.save(product);
 		
     }

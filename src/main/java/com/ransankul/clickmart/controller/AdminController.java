@@ -1,5 +1,7 @@
 package com.ransankul.clickmart.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.ransankul.clickmart.model.APIResponse;
 import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.model.Product;
 import com.ransankul.clickmart.service.AdminService;
@@ -23,49 +26,12 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
-// @PreAuthorize("hasRole('ROLE_ADMIN_USER')")
+@PreAuthorize("hasRole('ROLE_ADMIN_USER')")
 public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
 
-
-	@RequestMapping("/home")
-	public String home(Model m){
-		m.addAttribute("title","Home - ClickMart");
-		return "home";
-	}
-
-	@RequestMapping("/category")
-	public String category(Model m){
-		m.addAttribute("title","Categoey - ClickMart");
-		return "category";
-	}
-
-	@RequestMapping("/product")
-	public String product(Model m){
-		m.addAttribute("title","Product - ClickMart");
-		return "product";
-	}
-
-	@RequestMapping("/order")
-	public String order(Model m){
-		m.addAttribute("title","Order - ClickMart");
-		return "order";
-	}
-
-	@RequestMapping("/feedback")
-	public String feedback(Model m){
-		m.addAttribute("title","Feedback - ClickMart");
-		return "feedback";
-	}
-
-	@RequestMapping("/help")
-	public String help(Model m){
-		m.addAttribute("title","Help - ClickMart");
-		return "help";
-	}
-	
 	@PostMapping("/category/add")
 	public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
 		Category cat = adminService.addCategory(category);
@@ -73,6 +39,17 @@ public class AdminController {
 			return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
 		else
 			return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@PostMapping("/category/")
+	public ResponseEntity<APIResponse<List<Category>>> getCategory(@PathVariable String pageNumber) {
+		List<Category> cat = adminService.getCategory(Integer.parseInt(pageNumber));
+		if(cat.isEmpty()){
+			return new ResponseEntity<APIResponse<List<Category>>>(new APIResponse<>("201", null, "No category found"), HttpStatus.OK);
+		}
+		
+		APIResponse<List<Category>> response = new APIResponse("200",cat,"");
+		return new ResponseEntity<APIResponse<List<Category>>>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping("category/rm/{categoryId}")
@@ -91,6 +68,17 @@ public class AdminController {
 	
 	
 	//PRODUCTS-----------------------
+
+	@PostMapping("/category/")
+	public ResponseEntity<APIResponse<List<Category>>> getProduct(@PathVariable String pageNumber) {
+		List<Category> product = adminService.getCategory(Integer.parseInt(pageNumber));
+		if(product.isEmpty()){
+			return new ResponseEntity<APIResponse<List<Category>>>(new APIResponse<>("201", null, "No product found"), HttpStatus.OK);
+		}
+		
+		APIResponse<List<Category>> response = new APIResponse("200",product,"");
+		return new ResponseEntity<APIResponse<List<Category>>>(response, HttpStatus.OK);
+	}
 	
     @PostMapping("product/")
     public ResponseEntity<String> addProduct(@Valid @RequestBody Product product) {
