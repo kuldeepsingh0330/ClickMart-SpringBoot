@@ -7,18 +7,20 @@ body{
     background-color: #efefef;
 }
 
-.navbar .navBarDiv{
+
+
+.navbarC .navBarDiv{
     display: flex;
     flex-wrap: inherit;
     align-items: center;
     margin-left: 20px;
 }
 
-.navbar .navBarDiv img{
+.navbarC .navBarDiv img{
     mix-blend-mode: multiply;
 }
 
-.navbar .navBarDiv a{
+.navbarC .navBarDiv a{
     text-decoration: none;
     font-size: xx-large;
     font-weight: 700;
@@ -70,4 +72,35 @@ body{
     height: 3px;
     background: #efefef;
     margin: 20px;
+}
+
+/* category card */
+
+.cardsGrouopDiv{
+    display: flex;
+    justify-content: center;
+}
+
+.operationCategoryDiv{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    height: 300px;
+    margin-top: 5px;
+}
+
+.addNewCategory, .deleteCategory{
+    background: white;
+    width: 45%;
+    border: 2px;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: #FF5722;
+    padding: 10px;
+}
+
+.imgDiv{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

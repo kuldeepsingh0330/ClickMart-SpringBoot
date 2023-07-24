@@ -7,7 +7,73 @@
 </head>
 <body>
     <section>
-        <h1>This is Category Page</h1>
+        <div class="m-3">
+            <!-- cards -->
+            <div class="cardsGrouopDiv">
+                <div class="card w-50 m-2">
+                    <div class="card-body">
+                      <h3 class="card-title d-inline">Total Categories : </h3>
+                      <h3 class="d-inline" th:text="${totalCategory}"></h3>
+                    </div>
+                </div>
+    
+                <div class="card w-50 m-2">
+                    <div class="card-body">
+                      <h3 class="card-title d-inline">Public Categories : </h3>
+                      <h3 class="d-inline" th:text="${totalCategory}"></h3>
+                    </div>
+                </div>
+
+                <div class="card w-50 m-2">
+                    <div class="card-body">
+                      <h3 class="card-title d-inline">Private Categories : </h3>
+                      <h3 class="d-inline" th:text="${totalCategory}"></h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- add new category -->
+
+            <div class="operationCategoryDiv">
+                <div class="addNewCategory">
+                    <div class="imgDiv"><img class="addImg" src="/img/addIcon.png" alt="addNewCategory"></div>
+                    <h3 class="text-center">Add new Category</h3>
+                </div>
+
+                <div class="deleteCategory">
+                    <div class="imgDiv"><img class="addImg" src="/img/deleteIcon.png" alt="addNewCategory"></div>
+                    <h3 class="text-center">Add new Category</h3>   
+
+                </div>
+            </div>
+
+            <h3 class="text-center mt-5">Existing Category</h3>
+            
+            <hr>
+
+            <table class="table table-hover text-center">
+                <thead style="background-color: #afd7ff;">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Purpose</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Start Time</th>
+                    <th scope="col">Premission Granted</th>
+                    <th scope="col">Current Status</th>
+                    <th scope="col">Completion Time</th>
+                    <th scope="col">Granted By</th>
+                  </tr>
+                </thead>
+                <tbody>
+              
+                  <tr>
+                    <th scope="row"><%=i++ %></th>
+                    <td></td>
+                  </tr>
+              
+                </tbody>
+              </table>
+        </div>
     </section>
 </body>
 </html>

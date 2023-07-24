@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.model.Product;
+import com.ransankul.clickmart.model.Transaction;
 import com.ransankul.clickmart.service.AdminService;
 import com.ransankul.clickmart.repositery.CategoryRepositery;
 import com.ransankul.clickmart.repositery.ProductRepositery;
+import com.ransankul.clickmart.repositery.TransactionRepositery;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -21,6 +23,9 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private ProductRepositery productRepositery;
+
+	@Autowired
+	private TransactionRepositery transactionRepositery;
 
 	@Override
 	public List<Category> getCategory(int pageNumber) {
@@ -103,5 +108,11 @@ public class AdminServiceImpl implements AdminService {
         	return productRepositery.save(product);      	
         }
     }
+
+
+	public List<Transaction> getAllTransaction(String pageNumber){
+		Pageable p = PageRequest.of(Integer.parseInt(pageNumber),20);
+		return transactionRepositery.findAll(p).getContent();
+	}
 
 }

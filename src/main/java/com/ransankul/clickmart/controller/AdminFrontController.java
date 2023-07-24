@@ -18,6 +18,7 @@ public class AdminFrontController {
 
 	@RequestMapping("/category")
 	public String category(Model m){
+		m.addAttribute("totalCategory","50");
 		m.addAttribute("title","Categoey - ClickMart");
 		return "category";
 	}

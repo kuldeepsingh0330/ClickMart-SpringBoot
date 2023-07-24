@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.model.Product;
+import com.ransankul.clickmart.model.Transaction;
 
 public interface AdminService {
 	
@@ -22,5 +23,7 @@ public interface AdminService {
 	public void removeProduct(int productId);
 	
 	public Product updateProduct(int productId, Product updatedProduct);
+
+	public List<Transaction> getAllTransaction(String pageNumber);
 
 }

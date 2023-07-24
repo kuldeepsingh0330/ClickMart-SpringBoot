@@ -1,5 +1,7 @@
 package com.ransankul.clickmart.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,13 +20,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.ransankul.clickmart.model.APIResponse;
 import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.model.Product;
+import com.ransankul.clickmart.model.Transaction;
+import com.ransankul.clickmart.model.User;
+import com.ransankul.clickmart.payloads.TransactionResponse;
 import com.ransankul.clickmart.service.AdminService;
+import com.ransankul.clickmart.service.TransactionService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasRole('ROLE_ADMIN_USER')")
+// @PreAuthorize("hasRole('ROLE_ADMIN_USER')")
 public class AdminController {
 	
 	@Autowired
@@ -41,7 +46,7 @@ public class AdminController {
 			return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@PostMapping("/category/")
+	@PostMapping("/category/all")
 	public ResponseEntity<APIResponse<List<Category>>> getCategory(@PathVariable String pageNumber) {
 		List<Category> cat = adminService.getCategory(Integer.parseInt(pageNumber));
 		if(cat.isEmpty()){
@@ -102,6 +107,34 @@ public class AdminController {
     	else
 			return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
 					
+    }
+
+	//Transaction && Order
+
+	@PostMapping("/order/{pageNumber}")
+    public ResponseEntity<APIResponse<List<TransactionResponse>>> getAllPayments(@PathVariable String pageNumber,HttpServletRequest request){
+        	List<Transaction> list = adminService.getAllTransaction(pageNumber);
+        	List<TransactionResponse> response = new ArrayList<>();
+        	for(Transaction tr : list) {
+        		String status = tr.getStatus();
+        		Date orderTime = tr.getCreated_at();
+        		String transactionId = tr.getOrder_id();
+        		
+        		for(Product p : tr.getOrderedProduct()) {
+        			TransactionResponse tResponse = new TransactionResponse();
+        			tResponse.setImageName(p.getImages().get(0));
+        			tResponse.setProductId(String.valueOf(p.getProductId()));
+        			tResponse.setProductName(p.getName());
+        			tResponse.setOrderTime(orderTime);
+        			tResponse.setPaymentStatus(status);
+        			tResponse.setTransactionId(transactionId);
+        			
+        			response.add(tResponse);
+        		}
+        	}
+        	
+        	return new ResponseEntity<APIResponse<List<TransactionResponse>>>(new APIResponse<>("200",response,"OK"),HttpStatus.OK);
+        
     }
     
 }
