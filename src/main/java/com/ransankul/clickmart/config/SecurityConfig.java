@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.security.CustomUserDetailsService;
@@ -41,7 +42,7 @@ public class SecurityConfig implements AuthenticationProvider {
 
     private static final String[] PUBLIC_URL = {
         "/auth/**","/v3/api-docs","/v2/api-docs","/swagger-resources/**","/swagger-ui/**","webjars/**"
-        ,"/register","/validate","/css/**", "/js/**", "/images/**"
+        ,"/register","/validate"
     };
 
 
@@ -50,14 +51,17 @@ public class SecurityConfig implements AuthenticationProvider {
 	    
 	    http.csrf(csrf-> csrf.disable()).cors(cors-> cors.disable())
         .authorizeHttpRequests(auth-> auth
-        		.requestMatchers(HttpMethod.GET).permitAll()
+        		.requestMatchers("/admin/login").permitAll()
+        		.requestMatchers("/admin/redirect").permitAll()
+        		.requestMatchers("/admin/login/token").permitAll()
         		.requestMatchers("/admin/**").authenticated()
+        		.requestMatchers(HttpMethod.GET).permitAll()
         		.requestMatchers(PUBLIC_URL).permitAll()
         		.anyRequest().authenticated())
         .exceptionHandling(ex->ex.authenticationEntryPoint(jwTauthEntryPoint))
-        .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+        .addFilterBefore(jwtauthFilter,UsernamePasswordAuthenticationFilter.class);
 
-        http.addFilterBefore(jwtauthFilter,UsernamePasswordAuthenticationFilter.class);
         return http.build();
 	}
 

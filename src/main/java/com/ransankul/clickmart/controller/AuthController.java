@@ -52,7 +52,7 @@ public class AuthController {
 
     @PostMapping("/validate-token")
     public ResponseEntity<APIResponse<String>> validateToken(@RequestBody Map<String,String> map){
-    	System.out.println("validate token");
+    	
     	String token = map.get("token");
     	if(!jwtTokenHelper.isTokenExpired(token)) 
     		return new ResponseEntity<>(new APIResponse<>("200","","token is still valid"),HttpStatus.OK);
