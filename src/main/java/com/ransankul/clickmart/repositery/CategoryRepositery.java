@@ -16,4 +16,10 @@ public interface CategoryRepositery extends JpaRepository<Category, Integer>{
     @Query("SELECT e FROM Category e WHERE e.isPublic = true ORDER BY e.priority")
     public List<Category> getAllCategoryUser();
     
+    long count();
+    
+    long countByIsPublicTrue(); 
+    
+    long countByIsPublicFalse(); 
+    
 }

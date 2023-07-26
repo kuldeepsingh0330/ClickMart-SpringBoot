@@ -25,5 +25,9 @@ public interface AdminService {
 	public Product updateProduct(int productId, Product updatedProduct);
 
 	public List<Transaction> getAllTransaction(String pageNumber);
+	
+	public long getCount();
+	public long getCountPublic();
+	public long getCountPrivate();
 
 }

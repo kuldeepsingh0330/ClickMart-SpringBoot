@@ -66,7 +66,7 @@ public class AdminServiceImpl implements AdminService {
         if (cat == null) {
             throw new IllegalArgumentException("Category does not exist");
         }else {
-        	cat.setPublic(visible);
+        	cat.setIsPublic(visible);
         	categoryRepositery.save(cat);        	
         }	
 	}
@@ -113,6 +113,21 @@ public class AdminServiceImpl implements AdminService {
 	public List<Transaction> getAllTransaction(String pageNumber){
 		Pageable p = PageRequest.of(Integer.parseInt(pageNumber),20);
 		return transactionRepositery.findAll(p).getContent();
+	}
+
+	@Override
+	public long getCount() {
+		return categoryRepositery.count();
+	}
+
+	@Override
+	public long getCountPublic() {
+		return categoryRepositery.countByIsPublicTrue();
+	}
+
+	@Override
+	public long getCountPrivate() {
+		return categoryRepositery.countByIsPublicFalse();
 	}
 
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org" th:replace="base::baselayout(~{::section})">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" th:replace="~{base::baselayout(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,21 +13,21 @@
                 <div class="card w-50 m-2">
                     <div class="card-body">
                       <h3 class="card-title d-inline">Total Categories : </h3>
-                      <h3 class="d-inline" th:text="${totalCategory}"></h3>
+                      <h3 class="d-inline" th:text="${count}"></h3>
                     </div>
                 </div>
     
                 <div class="card w-50 m-2">
                     <div class="card-body">
                       <h3 class="card-title d-inline">Public Categories : </h3>
-                      <h3 class="d-inline" th:text="${totalCategory}"></h3>
+                      <h3 class="d-inline" th:text="${countPublic}"></h3>
                     </div>
                 </div>
 
                 <div class="card w-50 m-2">
                     <div class="card-body">
                       <h3 class="card-title d-inline">Private Categories : </h3>
-                      <h3 class="d-inline" th:text="${totalCategory}"></h3>
+                      <h3 class="d-inline" th:text="${countPrivate}"></h3>
                     </div>
                 </div>
             </div>
@@ -35,14 +35,14 @@
             <!-- add new category -->
 
             <div class="operationCategoryDiv">
-                <div class="addNewCategory">
+                <div class="addNewCategory" id="addCategory">
                     <div class="imgDiv"><img class="addImg" src="/img/addIcon.png" alt="addNewCategory"></div>
                     <h3 class="text-center">Add new Category</h3>
                 </div>
 
                 <div class="deleteCategory">
                     <div class="imgDiv"><img class="addImg" src="/img/deleteIcon.png" alt="addNewCategory"></div>
-                    <h3 class="text-center">Add new Category</h3>   
+                    <h3 class="text-center">Delete Category</h3>   
 
                 </div>
             </div>
@@ -50,30 +50,15 @@
             <h3 class="text-center mt-5">Existing Category</h3>
             
             <hr>
-
-            <table class="table table-hover text-center">
-                <thead style="background-color: #afd7ff;">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Purpose</th>
-                    <th scope="col">Location</th>
-                    <th scope="col">Start Time</th>
-                    <th scope="col">Premission Granted</th>
-                    <th scope="col">Current Status</th>
-                    <th scope="col">Completion Time</th>
-                    <th scope="col">Granted By</th>
-                  </tr>
-                </thead>
-                <tbody>
-              
-                  <tr>
-                    <th scope="row"><%=i++ %></th>
-                    <td></td>
-                  </tr>
-              
-                </tbody>
-              </table>
+                <div id="cardContainer" class="card-container">
+        		<!-- Cards will be dynamically added here -->
+    			</div>
+            
         </div>
+        
+        <div class="text-center m-3 "><h5 id="loadMore">Load More</h5></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/javascript/category.js"></script>
     </section>
 </body>
 </html>

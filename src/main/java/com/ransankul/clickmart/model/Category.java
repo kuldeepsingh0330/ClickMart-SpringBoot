@@ -43,7 +43,7 @@ public class Category {
 
     @NotNull(message = "Public flag is required")
     @Column(name = "is_public")
-    private Boolean isPublic;
+    private boolean isPublic;
 
     public Category() {
         // Default constructor required by Hibernate
@@ -127,13 +127,27 @@ public class Category {
         this.lastUpdate = lastUpdate;
     }
 
-    public boolean isPublic() {
-        return isPublic;
-    }
+	public void setCreatedAt(Long createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    public void setPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-    }   
+
+	public void setLastUpdate(Long lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+
+	public boolean getIsPublic() {
+		return isPublic;
+	}
+
+
+	public void setIsPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+	
+	
+  
     
 
     

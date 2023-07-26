@@ -75,6 +75,9 @@ public class AdminController {
 	public String category(Model m){
 		m.addAttribute("totalCategory","50");
 		m.addAttribute("title","Categoey - ClickMart");
+		m.addAttribute("count",adminService.getCount());
+		m.addAttribute("countPublic",adminService.getCountPublic());
+		m.addAttribute("countPrivate",adminService.getCountPrivate());
 		return "category";
 	}
 
@@ -139,13 +142,14 @@ public class AdminController {
 	@PostMapping("/category/add")
 	public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
 		Category cat = adminService.addCategory(category);
+		System.out.println(cat.getIsPublic());
 		if(cat != null)
 			return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
 		else
 			return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@PostMapping("/category/all")
+	@PostMapping("/category/all/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Category>>> getCategory(@PathVariable String pageNumber) {
 		List<Category> cat = adminService.getCategory(Integer.parseInt(pageNumber));
 		if(cat.isEmpty()){
