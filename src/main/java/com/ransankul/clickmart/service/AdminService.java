@@ -14,7 +14,7 @@ public interface AdminService {
 	
 	public void removeCategory(int categoryId);
 	
-	public void changeCategoryVisibility(int categoryId, boolean visible);
+	public void changeCategoryVisibility(int categoryId);
 
 	public List<Product> getProduct(int pageNumber);
 	
@@ -25,6 +25,9 @@ public interface AdminService {
 	public Product updateProduct(int productId, Product updatedProduct);
 
 	public List<Transaction> getAllTransaction(String pageNumber);
+	
+
+	public Category getCategoryByID(int categoryId);
 	
 	public long getCount();
 	public long getCountPublic();

@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.model.APIResponse;
 import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.model.Product;
@@ -138,6 +140,16 @@ public class AdminController {
             throw new RuntimeException("Invalid username and password");
         }
     }
+    
+    @PostMapping("/category/{categoryId}")
+    public ResponseEntity<Category> getCategoryByID(@PathVariable int categoryId) {
+        Category category = adminService.getCategoryByID(categoryId);
+        if (category != null) {
+            return ResponseEntity.ok(category);
+        } else {
+            throw new ResourceNotFoundException("No category found with this ID" + categoryId);
+        }
+    }
 
 	@PostMapping("/category/add")
 	public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
@@ -168,16 +180,15 @@ public class AdminController {
 
 	@PutMapping("category/vis/{categoryId}")
 	public ResponseEntity<String> changeCategoryVisibility(
-		@PathVariable int categoryId,
-	    @RequestParam("visible") boolean visible) {
-		adminService.changeCategoryVisibility(categoryId, visible);
+		@PathVariable int categoryId) {
+		adminService.changeCategoryVisibility(categoryId);
 	        return new ResponseEntity<>("Category visibility changed successfully", HttpStatus.OK);
 	}
 	
 	
 	//PRODUCTS-----------------------
 
-	@PostMapping("/category/")
+	@PostMapping("/category/product")
 	public ResponseEntity<APIResponse<List<Category>>> getProduct(@PathVariable String pageNumber) {
 		List<Category> product = adminService.getCategory(Integer.parseInt(pageNumber));
 		if(product.isEmpty()){

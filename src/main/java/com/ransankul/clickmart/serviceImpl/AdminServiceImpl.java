@@ -60,13 +60,13 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public void changeCategoryVisibility(int categoryId, boolean visible) {
+	public void changeCategoryVisibility(int categoryId) {
 		Category cat = categoryRepositery.findById(categoryId).get();
 		
         if (cat == null) {
             throw new IllegalArgumentException("Category does not exist");
         }else {
-        	cat.setIsPublic(visible);
+        	cat.setIsPublic(!cat.getIsPublic());
         	categoryRepositery.save(cat);        	
         }	
 	}
@@ -128,6 +128,11 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public long getCountPrivate() {
 		return categoryRepositery.countByIsPublicFalse();
+	}
+
+	@Override
+	public Category getCategoryByID(int categoryId) {
+		return categoryRepositery.findById(categoryId).get();
 	}
 
 }

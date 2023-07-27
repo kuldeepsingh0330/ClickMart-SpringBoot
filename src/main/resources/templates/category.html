@@ -40,11 +40,7 @@
                     <h3 class="text-center">Add new Category</h3>
                 </div>
 
-                <div class="deleteCategory">
-                    <div class="imgDiv"><img class="addImg" src="/img/deleteIcon.png" alt="addNewCategory"></div>
-                    <h3 class="text-center">Delete Category</h3>   
 
-                </div>
             </div>
 
             <h3 class="text-center mt-5">Existing Category</h3>
@@ -57,6 +53,79 @@
         </div>
         
         <div class="text-center m-3 "><h5 id="loadMore">Load More</h5></div>
+        
+        
+  <!-- Pop-up form -->
+  <div class="popup-form" id="popupForm">
+    <div class="form-container">
+		<div id="closeButtonDiv"><img id="closeform" src="/img/close.png" style="cursor: pointer; height: 20px; width: 20px	;"/></div>
+		  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;">Category Detail</h5>
+        <ul class="list-group list-group-flush">
+		<li class="list-group-item m-3" style="justify-content: center;">
+			<img src="" id="categoryImage"/>
+		  </li>
+		  <li class="list-group-item">
+			<div class="label">Category Id :</div>
+            <div class="value" id="categoryId"></div>
+		  </li>
+          <li class="list-group-item">
+			<div class="label">Category Name :</div>
+            <div class="value" id="categoryName"></div>
+		  </li>
+		  <li class="list-group-item">
+			<div class="label">Brief :</div>
+            <div class="value" id="categoryBrief"></div>
+		  </li>
+		  <li class="list-group-item">
+			<div class="label">Created At :</div>
+            <div class="value" id="createdAt"></div>
+		  </li>
+		  <li class="list-group-item">
+			<div class="label">Last Update :</div>
+            <div class="value" id="lastupdate"></div>
+		  </li>
+		  <li class="list-group-item">
+			<div class="label">Visibility :</div>
+            <div class="value" id="visibility"></div>
+		  </li>
+		  <li class="list-group-item">
+			<div class="label">Priority :</div>
+            <div class="value" id="priority"></div>
+		  </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<div class="buttonDiv">
+  <button type="button" class="btn btn-primary m-4" id="updateCategoryButton">Update Category</button>
+  <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Change Visibility</button>
+  <button type="button" class="btn btn-danger m-4" id="deleteCategoryButton">Delete</button>		  
+</div>
+
+    </div>
+  </div>
+  
+  <div class="modal fade" id="chandeVisibilityModel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Change Category Visibility</h5>
+        </div>
+        <div class="modal-body" id="modalBody">
+          This is the content of the modal.
+        </div>
+        <div class="modal-footer">
+			<button type="button" class="btn btn-secondary" id="closeConfirmVisibility">Close</button>
+        	<button type="button" class="btn btn-primary" id="confirmChangeVisibilityBtn">Change</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/javascript/category.js"></script>
     </section>

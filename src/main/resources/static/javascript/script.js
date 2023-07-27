@@ -30,6 +30,19 @@ function getCookie(name) {
     return null;
 }
 
+$(document).ready(function() {
+
+
+document.getElementById("logoutNav").addEventListener("click",logout);
+function logout(){
+	
+}
+
+
+});
+
+
+
 
 
 
