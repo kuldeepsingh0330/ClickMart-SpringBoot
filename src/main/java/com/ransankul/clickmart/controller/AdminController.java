@@ -1,11 +1,18 @@
 package com.ransankul.clickmart.controller;
 
+import java.io.File;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,8 +31,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.model.APIResponse;
 import com.ransankul.clickmart.model.Category;
@@ -52,7 +62,7 @@ public class AdminController {
 	private AdminService adminService;
 
 
-	    @Autowired
+	@Autowired
     private UserDetailsService userDetailsService;
 
     @Autowired
@@ -60,6 +70,11 @@ public class AdminController {
 
     @Autowired
     private JWTTokenHelper jwtTokenHelper;
+
+	@Autowired
+	private ObjectMapper mapper;
+	@Value("${project.image}")
+    private String path;
 
 	@RequestMapping("/home")
 	public String home(Model m){
@@ -152,14 +167,37 @@ public class AdminController {
     }
 
 	@PostMapping("/category/add")
-	public ResponseEntity<String> addCategory(@Valid @RequestBody Category category) {
-		Category cat = adminService.addCategory(category);
-		System.out.println(cat.getIsPublic());
-		if(cat != null)
-			return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
-		else
-			return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<String> addCategory(@RequestParam("category") String cat, @RequestParam("iconFile") MultipartFile iconFile) {
+
+		if (!iconFile.isEmpty()) {
+			try {
+				
+				Category category = mapper.readValue(cat,Category.class);
+				System.out.println(category);
+				System.out.println(cat);
+				String fileName = iconFile.getOriginalFilename();
+				Path filePath = Paths.get(path+File.separator+"categoryImage", fileName);
+				Files.write(filePath, iconFile.getBytes());
+	
+				category.setIcon(fileName);
+				adminService.addCategory(category);
+				return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
+			}catch(JsonProcessingException exception){
+				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
+							
+			}catch(IllegalArgumentException exception){
+				return new ResponseEntity<>("Category already exist with this name", HttpStatus.BAD_REQUEST);
+							
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+	
+		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);
 	}
+	
 
 	@PostMapping("/category/all/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Category>>> getCategory(@PathVariable String pageNumber) {

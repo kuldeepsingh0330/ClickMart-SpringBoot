@@ -1,133 +1,199 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org" th:replace="~{base::baselayout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::baselayout(~{::section})}">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Categoey - ClickMart</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${title}">Categoey - ClickMart</title>
 </head>
+
 <body>
-    <section>
-        <div class="m-3">
-            <!-- cards -->
-            <div class="cardsGrouopDiv">
-                <div class="card w-50 m-2">
-                    <div class="card-body">
-                      <h3 class="card-title d-inline">Total Categories : </h3>
-                      <h3 class="d-inline" th:text="${count}"></h3>
-                    </div>
-                </div>
-    
-                <div class="card w-50 m-2">
-                    <div class="card-body">
-                      <h3 class="card-title d-inline">Public Categories : </h3>
-                      <h3 class="d-inline" th:text="${countPublic}"></h3>
-                    </div>
-                </div>
-
-                <div class="card w-50 m-2">
-                    <div class="card-body">
-                      <h3 class="card-title d-inline">Private Categories : </h3>
-                      <h3 class="d-inline" th:text="${countPrivate}"></h3>
-                    </div>
-                </div>
-            </div>
-
-            <!-- add new category -->
-
-            <div class="operationCategoryDiv">
-                <div class="addNewCategory" id="addCategory">
-                    <div class="imgDiv"><img class="addImg" src="/img/addIcon.png" alt="addNewCategory"></div>
-                    <h3 class="text-center">Add new Category</h3>
-                </div>
-
-
-            </div>
-
-            <h3 class="text-center mt-5">Existing Category</h3>
-            
-            <hr>
-                <div id="cardContainer" class="card-container">
-        		<!-- Cards will be dynamically added here -->
-    			</div>
-            
+  <section>
+    <div class="m-3">
+      <!-- cards -->
+      <div class="cardsGrouopDiv">
+        <div class="card w-50 m-2">
+          <div class="card-body">
+            <h3 class="card-title d-inline">Total Categories : </h3>
+            <h3 class="d-inline" th:text="${count}"></h3>
+          </div>
         </div>
-        
-        <div class="text-center m-3 "><h5 id="loadMore">Load More</h5></div>
-        
-        
-  <!-- Pop-up form -->
-  <div class="popup-form" id="popupForm">
-    <div class="form-container">
-		<div id="closeButtonDiv"><img id="closeform" src="/img/close.png" style="cursor: pointer; height: 20px; width: 20px	;"/></div>
-		  <div class="container">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;">Category Detail</h5>
-        <ul class="list-group list-group-flush">
-		<li class="list-group-item m-3" style="justify-content: center;">
-			<img src="" id="categoryImage"/>
-		  </li>
-		  <li class="list-group-item">
-			<div class="label">Category Id :</div>
-            <div class="value" id="categoryId"></div>
-		  </li>
-          <li class="list-group-item">
-			<div class="label">Category Name :</div>
-            <div class="value" id="categoryName"></div>
-		  </li>
-		  <li class="list-group-item">
-			<div class="label">Brief :</div>
-            <div class="value" id="categoryBrief"></div>
-		  </li>
-		  <li class="list-group-item">
-			<div class="label">Created At :</div>
-            <div class="value" id="createdAt"></div>
-		  </li>
-		  <li class="list-group-item">
-			<div class="label">Last Update :</div>
-            <div class="value" id="lastupdate"></div>
-		  </li>
-		  <li class="list-group-item">
-			<div class="label">Visibility :</div>
-            <div class="value" id="visibility"></div>
-		  </li>
-		  <li class="list-group-item">
-			<div class="label">Priority :</div>
-            <div class="value" id="priority"></div>
-		  </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-<div class="buttonDiv">
-  <button type="button" class="btn btn-primary m-4" id="updateCategoryButton">Update Category</button>
-  <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Change Visibility</button>
-  <button type="button" class="btn btn-danger m-4" id="deleteCategoryButton">Delete</button>		  
-</div>
 
-    </div>
-  </div>
-  
-  <div class="modal fade" id="chandeVisibilityModel">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Change Category Visibility</h5>
+        <div class="card w-50 m-2">
+          <div class="card-body">
+            <h3 class="card-title d-inline">Public Categories : </h3>
+            <h3 class="d-inline" th:text="${countPublic}"></h3>
+          </div>
         </div>
-        <div class="modal-body" id="modalBody">
-          This is the content of the modal.
-        </div>
-        <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" id="closeConfirmVisibility">Close</button>
-        	<button type="button" class="btn btn-primary" id="confirmChangeVisibilityBtn">Change</button>
+
+        <div class="card w-50 m-2">
+          <div class="card-body">
+            <h3 class="card-title d-inline">Private Categories : </h3>
+            <h3 class="d-inline" th:text="${countPrivate}"></h3>
+          </div>
         </div>
       </div>
+
+      <!-- add new category -->
+
+      <div class="operationCategoryDiv">
+        <div class="addNewCategory" id="addCategory">
+          <div class="imgDiv"><img class="addImg" src="/img/addIcon.png" alt="addNewCategory"></div>
+          <h3 class="text-center">Add new Category</h3>
+        </div>
+
+
+      </div>
+
+      <h3 class="text-center mt-5">Existing Category</h3>
+
+      <hr>
+      <div id="cardContainer" class="card-container">
+        <!-- Cards will be dynamically added here -->
+      </div>
+
     </div>
-  </div>
-  
-</div>
+
+    <div class="text-center m-3 ">
+      <h5 id="loadMore">Load More</h5>
+    </div>
+
+
+    <!-- Pop-up form -->
+    <div class="popup-form" id="popupForm">
+      <div class="form-container">
+        <div id="closeButtonDiv"><img id="closeform" src="/img/close.png"
+            style="cursor: pointer; height: 20px; width: 20px	;" /></div>
+        <div class="container">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;">Category Detail</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item m-3" style="justify-content: center;">
+                  <img src="" id="categoryImage" />
+                </li>
+                <li class="list-group-item">
+                  <div class="label">Category Id :</div>
+                  <div class="value" id="categoryId"></div>
+                </li>
+                <li class="list-group-item">
+                  <div class="label">Category Name :</div>
+                  <div class="value" id="categoryName"></div>
+                </li>
+                <li class="list-group-item">
+                  <div class="label">Brief :</div>
+                  <div class="value" id="categoryBrief"></div>
+                </li>
+                <li class="list-group-item">
+                  <div class="label">Created At :</div>
+                  <div class="value" id="createdAt"></div>
+                </li>
+                <li class="list-group-item">
+                  <div class="label">Last Update :</div>
+                  <div class="value" id="lastupdate"></div>
+                </li>
+                <li class="list-group-item">
+                  <div class="label">Visibility :</div>
+                  <div class="value" id="visibility"></div>
+                </li>
+                <li class="list-group-item">
+                  <div class="label">Priority :</div>
+                  <div class="value" id="priority"></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="buttonDiv">
+          <button type="button" class="btn btn-primary m-4" id="updateCategoryButton">Update Category</button>
+          <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Change Visibility</button>
+          <button type="button" class="btn btn-danger m-4" id="deleteCategoryButton">Delete</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal fade" id="chandeVisibilityModel">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Change Category Visibility</h5>
+          </div>
+          <div class="modal-body" id="modalBody">
+            This is the content of the modal.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="closeConfirmVisibility">Close</button>
+            <button type="button" class="btn btn-primary" id="confirmChangeVisibilityBtn">Change</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- add categoryForm -->
+
+    <div class="popup-form" id="addCategorypopupForm">
+      <div class="form-container">
+        <div id="closeButtonDiv"><img id="closeaddCategoryform" src="/img/close.png"
+            style="cursor: pointer; height: 20px; width: 20px	;" /></div>
+        <div class="container">
+          <div class="card">
+            <div class="card-body">
+              <h2 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;" id="formTitleCategory">Add Category</h2>
+              <form id="categoryForm" enctype="multipart/form-data">
+                <!-- Name Field -->
+                <div class="form-group m-2">
+                  <label for="name">Name:</label>
+                  <input type="text" class="form-control" id="categoryname" name="name" required>
+                </div>
+
+                <!-- Brief Field -->
+                <div class="form-group m-2">
+                  <label for="brief">Brief:</label>
+                  <textarea class="form-control" id="brief" name="categorybrief" rows="4" required></textarea>
+                </div>
+
+                <!-- Priority Field -->
+                <div class="form-group m-2">
+                  <label for="priority">Priority:</label>
+                  <input type="number" class="form-control" id="catpriority" name="categorypriority" min="1" required>
+                </div>
+
+                <!-- Is Public Field -->
+                <div class="form-group ">
+                  <label for="isPublic">Is Public:</label>
+                  <select class="form-control" id="isPublic" name="categoryispublic" required>
+                    <option value="true">PUBLIC</option>
+                    <option value="false">PRIVATE</option>
+                  </select>
+                </div>
+
+                
+                <!-- Icon Field (File Input) -->
+                <div class="form-group mt-5">
+                  <label for="icon">Icon:</label>
+                  <input type="file" class="form-control-file" id="icon" name="icon" accept="image/*" required>
+                </div>
+
+
+                <div class="buttonDiv">
+                  <button type="submit" class="btn btn-success m-4" id="addCategoryButton">Save Category</button>
+                  <button type="reset" class="btn btn-primary m-4" id="resetCategoryButton">Reset</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/javascript/category.js"></script>
-    </section>
+  </section>
 </body>
+
 </html>

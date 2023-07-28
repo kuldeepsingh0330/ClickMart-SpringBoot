@@ -20,7 +20,6 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @NotBlank(message = "Color is required")
     @Column(name = "color")
     private String color;
 
@@ -28,7 +27,6 @@ public class Category {
     @Column(name = "brief")
     private String brief;
 
-    @NotBlank(message = "Icon is required")
     @Column(name = "icon")
     private String icon;
 
