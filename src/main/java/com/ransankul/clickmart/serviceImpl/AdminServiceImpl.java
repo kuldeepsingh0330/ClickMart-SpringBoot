@@ -135,4 +135,24 @@ public class AdminServiceImpl implements AdminService {
 		return categoryRepositery.findById(categoryId).get();
 	}
 
+	@Override
+	public Category updateCategory(Category category) {
+		return categoryRepositery.save(category);
+	}
+
+	@Override
+	public long getCountProduct() {
+		return productRepositery.count();
+	}
+
+	@Override
+	public long getCountoutOfStockProduct() {
+		return productRepositery.countByIsAvailableFalse();
+	}
+
+	@Override
+	public Product getProductById(int id) {
+		return productRepositery.findById(id).get();
+	}
+
 }

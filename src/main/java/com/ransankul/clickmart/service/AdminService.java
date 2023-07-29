@@ -9,6 +9,8 @@ import com.ransankul.clickmart.model.Transaction;
 public interface AdminService {
 	
 	public Category addCategory(Category category);
+	
+	public Category updateCategory(Category category);
 
 	public List<Category> getCategory(int pageNumber);
 	
@@ -19,6 +21,8 @@ public interface AdminService {
 	public List<Product> getProduct(int pageNumber);
 	
 	public Product addProduct(Product product);
+
+	public Product getProductById(int id);
 	
 	public void removeProduct(int productId);
 	
@@ -32,5 +36,9 @@ public interface AdminService {
 	public long getCount();
 	public long getCountPublic();
 	public long getCountPrivate();
+
+
+	public long getCountProduct();
+	public long getCountoutOfStockProduct();
 
 }

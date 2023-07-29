@@ -201,6 +201,10 @@ body {
   display: block;
 }
 
+.inactive {
+  display: none;
+}
+
 
 .list-group-item {
   display: flex;
@@ -244,4 +248,18 @@ body {
 
 #addCategory{
   cursor: pointer;
+}
+
+
+.cardpriceh3{
+  color: red;
+}
+
+.carddiscounth3{
+  color: green;
+}
+
+.priceDiscountDiv{
+  display: flex;
+  justify-content: space-between;
 }

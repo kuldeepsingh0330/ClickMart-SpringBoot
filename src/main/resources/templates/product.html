@@ -7,7 +7,209 @@
 </head>
 <body>
     <section>
-        <h1>This is Product Page</h1>
+
+              <!-- cards -->
+      <div class="cardsGrouopDiv">
+        <div class="card w-50 m-2">
+          <div class="card-body">
+            <h3 class="card-title d-inline">Total Product : </h3>
+            <h3 class="d-inline" th:text="${count}"></h3>
+          </div>
+        </div>
+
+        <div class="card w-50 m-2">
+            <div class="card-body">
+              <h3 class="card-title d-inline">Out of stock Product : </h3>
+              <h3 class="d-inline" th:text="${outofstock}"></h3>
+            </div>
+          </div>
+
+      </div>
+
+      <div class="operationCategoryDiv">
+        <div class="addNewCategory" id="addCategory">
+          <div class="imgDiv"><img class="addImg" src="/img/addIcon.png" alt="addNewCategory"></div>
+          <h3 class="text-center">Add new Prooduct</h3>
+        </div>
+      </div>
+
+      <h3 class="text-center mt-5">Existing Product</h3>
+
+      <hr>
+      <div id="cardContainer" class="card-container">
+        <!-- Cards will be dynamically added here -->
+      </div>
+
+
+      <div class="text-center m-3 ">
+        <h5 id="loadMore">Load More</h5>
+      </div>
+
+
+
+
+         <!-- Pop-up form -->
+    <div class="popup-form" id="popupForm">
+        <div class="form-container">
+          <div id="closeButtonDiv"><img id="closeform" src="/img/close.png"
+              style="cursor: pointer; height: 20px; width: 20px	;" /></div>
+          <div class="container">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;">Category Detail</h5>
+
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <!-- Carousel Indicators -->
+                    <ol class="carousel-indicators">
+                      <!-- Indicators will be dynamically added here -->
+                    </ol>
+                  
+                    <!-- Carousel Inner -->
+                    <div class="carousel-inner">
+                      <!-- Images will be dynamically added here -->
+                    </div>
+                  
+                    <!-- Carousel Controls -->
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                  
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item m-3" style="justify-content: center;">
+                    <img src="" id="categoryImage" />
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Product Id :</div>
+                    <div class="value" id="categoryId"></div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Product Name :</div>
+                    <div class="value" id="categoryName"></div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Price :</div>
+                    <div class="value" id="price"></div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Discount :</div>
+                    <div class="value" id="discount"></div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Category :</div>
+                    <div class="value" id="categoryOfProduct"></div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Available :</div>
+                    <div class="value" id="visibility"></div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Quantity :</div>
+                    <div class="value" id="quantity"></div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="label">Description :</div>
+                    <div class="value" id="categoryBrief"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="buttonDiv">
+            <button type="button" class="btn btn-primary m-4" id="updateCategoryButton">Update Category</button>
+            <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Change Visibility</button>
+            <button type="button" class="btn btn-danger m-4" id="deleteCategoryButton">Delete</button>
+          </div>
+  
+        </div>
+      </div>
+
+
+      <div class="popup-form" id="addCategorypopupForm">
+        <div class="form-container">
+          <div id="closeButtonDiv"><img id="closeaddCategoryform" src="/img/close.png"
+              style="cursor: pointer; height: 20px; width: 20px	;" /></div>
+          <div class="container">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;" id="formTitleCategory">Add Category</h2>
+                <form id="categoryForm" enctype="multipart/form-data">
+                  <!-- Name Field -->
+                  <div class="form-group m-2">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="categoryname" name="name" required>
+                  </div>
+  
+                  <!-- Brief Field -->
+                  <div class="form-group m-2">
+                    <label for="brief">Description:</label>
+                    <textarea class="form-control" id="brief" name="categorybrief" rows="4" required></textarea>
+                  </div>
+  
+                  <!-- Price Field -->
+                  <div class="form-group m-2">
+                    <label for="priority">Price:</label>
+                    <input type="number" class="form-control" id="catpriority" name="categorypriority" min="1" required>
+                  </div>
+
+                    <!-- Discount Field -->
+                  <div class="form-group m-2">
+                    <label for="priority">Discount:</label>
+                    <input type="number" class="form-control" id="catpriority" name="categorypriority" min="1" required>
+                  </div>
+
+
+                    <!-- Quantity Field -->
+                    <div class="form-group m-2">
+                        <label for="priority">Quantity:</label>
+                        <input type="number" class="form-control" id="catpriority" name="categorypriority" min="1" required>
+                      </div>
+  
+                  <!-- isAvailable Field -->
+                  <div class="form-group ">
+                    <label for="isPublic">isAvailable:</label>
+                    <select class="form-control" id="isPublic" name="categoryispublic" required>
+                      <option value="true">YES</option>
+                      <option value="false">NO</option>
+                    </select>
+                  </div>
+
+                    <!-- Category Field -->
+                  <div class="form-group ">
+                    <label for="isPublic">Select Product Category:</label>
+                    <select class="form-control" id="isPublic" name="categoryispublic" required>
+
+                    </select>
+                  </div>
+  
+                  
+                  <!-- images Field (File Input) -->
+                  <div class="form-group mt-5">
+                    <label for="icon">Icon:</label>
+                    <input type="file" class="form-control-file" id="icon" name="icon" accept="image/*" required multiple>
+                  </div>
+  
+  
+                  <div class="buttonDiv">
+                    <button type="submit" class="btn btn-success m-4 active" id="addCategoryButton">Save Product</button>
+                    <button type="submit"  class="btn btn-success m-4 " id="updateCategoryButtonadd">Update Product</button>
+                    <button type="reset" class="btn btn-primary m-4" id="resetCategoryButton">Reset</button>
+                  </div>
+                </form>
+  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="/javascript/product.js"></script>
     </section>
 </body>
 </html>

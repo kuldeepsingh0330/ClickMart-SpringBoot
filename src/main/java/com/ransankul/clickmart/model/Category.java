@@ -125,15 +125,6 @@ public class Category {
         this.lastUpdate = lastUpdate;
     }
 
-	public void setCreatedAt(Long createdAt) {
-		this.createdAt = createdAt;
-	}
-
-
-	public void setLastUpdate(Long lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
 
 	public boolean getIsPublic() {
 		return isPublic;

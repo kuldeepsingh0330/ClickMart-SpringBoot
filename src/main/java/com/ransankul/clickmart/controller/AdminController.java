@@ -3,6 +3,7 @@ package com.ransankul.clickmart.controller;
 import java.io.File;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,7 +14,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -101,6 +106,8 @@ public class AdminController {
 	@RequestMapping("/product")
 	public String product(Model m){
 		m.addAttribute("title","Product - ClickMart");
+		m.addAttribute("count",adminService.getCountProduct());
+		m.addAttribute("outofstock",adminService.getCountoutOfStockProduct());
 		return "product";
 	}
 
@@ -173,8 +180,6 @@ public class AdminController {
 			try {
 				
 				Category category = mapper.readValue(cat,Category.class);
-				System.out.println(category);
-				System.out.println(cat);
 				String fileName = iconFile.getOriginalFilename();
 				Path filePath = Paths.get(path+File.separator+"categoryImage", fileName);
 				Files.write(filePath, iconFile.getBytes());
@@ -196,6 +201,42 @@ public class AdminController {
 		}
 	
 		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);
+	}
+
+	@PostMapping("/category/update")
+	public ResponseEntity<String> updateCategory(@RequestParam("category") String cat, @RequestParam("iconFile") MultipartFile iconFile) {
+
+		if (!iconFile.isEmpty()) {
+			try {
+				
+				Category category = mapper.readValue(cat,Category.class);
+				if(category.getId() == 0) throw new IllegalArgumentException();
+				String fileName = iconFile.getOriginalFilename();
+				Path filePath = Paths.get(path+File.separator+"categoryImage", fileName);
+				Files.write(filePath, iconFile.getBytes());
+
+				Category existCategory = adminService.getCategoryByID(category.getId());
+				category.setCreatedAt(existCategory.getCreatedAt());
+				category.setLastUpdate(System.currentTimeMillis());
+				category.setIcon(fileName);
+				
+				adminService.updateCategory(category);
+				return new ResponseEntity<>("Category updated succesfully", HttpStatus.OK);
+			}catch(JsonProcessingException exception){
+				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
+							
+			}catch(IllegalArgumentException exception){
+				return new ResponseEntity<>("provided data is invalid", HttpStatus.BAD_REQUEST);
+							
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+	
+		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);
+
 	}
 	
 
@@ -226,9 +267,9 @@ public class AdminController {
 	
 	//PRODUCTS-----------------------
 
-	@PostMapping("/category/product")
+	@PostMapping("/product/all/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Category>>> getProduct(@PathVariable String pageNumber) {
-		List<Category> product = adminService.getCategory(Integer.parseInt(pageNumber));
+		List<Product> product = adminService.getProduct(Integer.parseInt(pageNumber));
 		if(product.isEmpty()){
 			return new ResponseEntity<APIResponse<List<Category>>>(new APIResponse<>("201", null, "No product found"), HttpStatus.OK);
 		}
@@ -237,10 +278,17 @@ public class AdminController {
 		return new ResponseEntity<APIResponse<List<Category>>>(response, HttpStatus.OK);
 	}
 	
-    @PostMapping("product/")
+    @PostMapping("/product/")
     public ResponseEntity<String> addProduct(@Valid @RequestBody Product product) {
         adminService.addProduct(product);
         return new ResponseEntity<>("Product added successfully", HttpStatus.CREATED);
+    }
+
+
+	@PostMapping("/product/{id}")
+    public ResponseEntity<APIResponse<Product>> getProductById(@PathVariable int id) {
+        Product product = adminService.getProductById(id);
+        return new ResponseEntity<APIResponse<Product>>(new APIResponse<>("201", product, ""), HttpStatus.CREATED);
     }
 
     @DeleteMapping("product/rm/{productId}")
@@ -260,6 +308,7 @@ public class AdminController {
 			return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
 					
     }
+    
 
 	//Transaction && Order
 

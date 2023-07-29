@@ -17,6 +17,10 @@ public interface ProductRepositery extends JpaRepository<Product,Integer>{
     
     @Query("SELECT p.images FROM Product p WHERE p.productId = :productId")
     List<String> getImagesByProductId(int productId);
+
+    long count();
+    
+    long countByIsAvailableFalse(); 
     
     
     
