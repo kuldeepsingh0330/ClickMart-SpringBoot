@@ -98,15 +98,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
 	@Override
-    public Product updateProduct(int productId, Product updatedProduct) {
-		
-		Product product = productRepositery.findById(productId).get();
-		
-        if (product == null) {
-            throw new IllegalArgumentException("Product does not exist");
-        }else {
-        	return productRepositery.save(product);      	
-        }
+    public Product updateProduct(Product updatedProduct) {
+		return productRepositery.save(updatedProduct);
     }
 
 
@@ -136,6 +129,11 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
+	public Product getProductByID(int categoryId) {
+		return productRepositery.findById(categoryId).get();
+	}
+
+	@Override
 	public Category updateCategory(Category category) {
 		return categoryRepositery.save(category);
 	}
@@ -153,6 +151,14 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public Product getProductById(int id) {
 		return productRepositery.findById(id).get();
+	}
+
+
+	@Override
+	public List<Object[]> getAllCategoryName(){
+
+		return categoryRepositery.getAllCategoryNameandId();
+
 	}
 
 }

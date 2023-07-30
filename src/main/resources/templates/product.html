@@ -56,34 +56,26 @@
           <div class="container">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;">Category Detail</h5>
+                <h5 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;">Product Detail</h5>
 
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                    <!-- Carousel Indicators -->
-                    <ol class="carousel-indicators">
-                      <!-- Indicators will be dynamically added here -->
-                    </ol>
-                  
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">                  
                     <!-- Carousel Inner -->
                     <div class="carousel-inner">
                       <!-- Images will be dynamically added here -->
                     </div>
                   
                     <!-- Carousel Controls -->
-                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" id="prevButton" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color: #ff5722; margin: 10px; padding: 20px; border-radius: 50%;"></span>
                       <span class="sr-only">Previous</span>
                     </a>
-                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" id="nextButton" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true" style="background-color: #ff5722; margin: 10px; padding: 20px; border-radius: 50%;"></span>
                       <span class="sr-only">Next</span>
                     </a>
                   </div>
                   
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item m-3" style="justify-content: center;">
-                    <img src="" id="categoryImage" />
-                  </li>
                   <li class="list-group-item">
                     <div class="label">Product Id :</div>
                     <div class="value" id="categoryId"></div>
@@ -121,8 +113,9 @@
             </div>
           </div>
           <div class="buttonDiv">
-            <button type="button" class="btn btn-primary m-4" id="updateCategoryButton">Update Category</button>
-            <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Change Visibility</button>
+            <button type="button" class="btn btn-primary m-4" id="updateCategoryButton">Update Product</button>
+            <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Change Availibality</button>
+            <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Update Quantity</button>
             <button type="button" class="btn btn-danger m-4" id="deleteCategoryButton">Delete</button>
           </div>
   
@@ -137,7 +130,7 @@
           <div class="container">
             <div class="card">
               <div class="card-body">
-                <h2 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;" id="formTitleCategory">Add Category</h2>
+                <h2 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;" id="formTitleCategory">Add Product</h2>
                 <form id="categoryForm" enctype="multipart/form-data">
                   <!-- Name Field -->
                   <div class="form-group m-2">
@@ -154,26 +147,26 @@
                   <!-- Price Field -->
                   <div class="form-group m-2">
                     <label for="priority">Price:</label>
-                    <input type="number" class="form-control" id="catpriority" name="categorypriority" min="1" required>
+                    <input type="number" class="form-control" step="0.01" id="catprice" name="catprice" min="1" required>
                   </div>
 
                     <!-- Discount Field -->
                   <div class="form-group m-2">
                     <label for="priority">Discount:</label>
-                    <input type="number" class="form-control" id="catpriority" name="categorypriority" min="1" required>
+                    <input type="number" class="form-control" step="0.01" id="catDiscount" name="catDiscount" min="0" required>
                   </div>
 
 
                     <!-- Quantity Field -->
                     <div class="form-group m-2">
                         <label for="priority">Quantity:</label>
-                        <input type="number" class="form-control" id="catpriority" name="categorypriority" min="1" required>
+                        <input type="number" class="form-control" id="catQuantity" name="catQuantity" min="1" required>
                       </div>
   
                   <!-- isAvailable Field -->
                   <div class="form-group ">
                     <label for="isPublic">isAvailable:</label>
-                    <select class="form-control" id="isPublic" name="categoryispublic" required>
+                    <select class="form-control" id="catIsAvailable" name="catIsAvailable" required>
                       <option value="true">YES</option>
                       <option value="false">NO</option>
                     </select>
@@ -182,22 +175,22 @@
                     <!-- Category Field -->
                   <div class="form-group ">
                     <label for="isPublic">Select Product Category:</label>
-                    <select class="form-control" id="isPublic" name="categoryispublic" required>
+                    <select class="form-control" id="producyCat" name="producyCat" required>
 
                     </select>
                   </div>
   
                   
                   <!-- images Field (File Input) -->
-                  <div class="form-group mt-5">
+                  <div class="form-group mt-5" id="productImageInput">
                     <label for="icon">Icon:</label>
                     <input type="file" class="form-control-file" id="icon" name="icon" accept="image/*" required multiple>
                   </div>
   
   
                   <div class="buttonDiv">
-                    <button type="submit" class="btn btn-success m-4 active" id="addCategoryButton">Save Product</button>
-                    <button type="submit"  class="btn btn-success m-4 " id="updateCategoryButtonadd">Update Product</button>
+                    <button type="submit" class="btn btn-success m-4 active" id="addProductButton">Save Product</button>
+                    <button type="submit"  class="btn btn-success m-4 " id="updateProductButton">Update Product</button>
                     <button type="reset" class="btn btn-primary m-4" id="resetCategoryButton">Reset</button>
                   </div>
                 </form>

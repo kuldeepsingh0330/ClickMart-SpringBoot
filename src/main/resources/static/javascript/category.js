@@ -40,7 +40,6 @@ $(document).ready(function () {
 
   document.getElementById("categoryForm").addEventListener("submit", function (event) {
     event.preventDefault();
-    // Make the AJAX POST request
     const clickedButton = event.submitter;
     if (clickedButton.id === "addCategoryButton") {
       addCategoryDateCreate();

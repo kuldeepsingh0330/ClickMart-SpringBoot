@@ -237,8 +237,7 @@ public class AdminController {
 	
 		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);
 
-	}
-	
+	}	
 
 	@PostMapping("/category/all/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Category>>> getCategory(@PathVariable String pageNumber) {
@@ -278,10 +277,47 @@ public class AdminController {
 		return new ResponseEntity<APIResponse<List<Category>>>(response, HttpStatus.OK);
 	}
 	
-    @PostMapping("/product/")
-    public ResponseEntity<String> addProduct(@Valid @RequestBody Product product) {
-        adminService.addProduct(product);
-        return new ResponseEntity<>("Product added successfully", HttpStatus.CREATED);
+    @PostMapping("/product/add")
+    public ResponseEntity<String> addProduct(@RequestParam("category") String cat, @RequestParam("iconFile") List<MultipartFile> iconFile) {
+		if (!iconFile.isEmpty()) {
+			try {
+				
+				Product product = mapper.readValue(cat,Product.class);
+				List<String> fileNameList = new ArrayList<>();
+				
+				Product pro = adminService.addProduct(product);
+
+				String folderPath = path+"productImage"+File.separator+String.valueOf(pro.getProductId());
+				File folder = new File(folderPath);
+				boolean created = folder.mkdirs();
+
+				for(MultipartFile file : iconFile){
+					String fileName = file.getOriginalFilename();
+
+					if(created){
+					Path filePath = Paths.get(folderPath, fileName);
+					Files.write(filePath, file.getBytes());
+					fileNameList.add(fileName);
+					}else throw new Exception();
+				}
+				pro.setImages(fileNameList);
+	
+				adminService.updateProduct(pro);
+				return new ResponseEntity<>("Product added successfully", HttpStatus.CREATED);
+			}catch(JsonProcessingException exception){
+				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
+							
+			}catch(IllegalArgumentException exception){
+				return new ResponseEntity<>("Category already exist with this name", HttpStatus.BAD_REQUEST);
+							
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+	
+		return new ResponseEntity<>("Images is required", HttpStatus.BAD_REQUEST);
     }
 
 
@@ -297,16 +333,40 @@ public class AdminController {
         return new ResponseEntity<>("Product removed successfully", HttpStatus.OK);
     }
 
-    @PutMapping("product/update/{productId}")
-    public ResponseEntity<String> updateProduct(
-            @PathVariable int productId,
-            @Valid @RequestBody Product product) {
-    	Product pro = adminService.updateProduct(productId, product);
-    	if(pro != null)
-    		return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
-    	else
-			return new ResponseEntity<String>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
-					
+
+	@PostMapping("product/update")
+    public ResponseEntity<String> updateProduct(@RequestParam("category") String cat, @RequestParam("iconFile") List<MultipartFile> iconFile) {
+    	if (!iconFile.isEmpty()) {
+			try {				
+				Product product = mapper.readValue(cat,Product.class);
+				if(product.getProductId() == 0) throw new IllegalArgumentException();
+				List<String> fileNameList = new ArrayList<>();
+
+				for(MultipartFile file : iconFile){
+					String fileName = file.getOriginalFilename();
+					String folderPath = path+"productImage"+File.separator+String.valueOf(product.getProductId());
+					Path filePath = Paths.get(folderPath, fileName);
+					Files.write(filePath, file.getBytes());
+					fileNameList.add(fileName);
+				}
+				product.setImages(fileNameList);
+				
+				adminService.updateProduct(product);				
+				return new ResponseEntity<>("Product updated succesfully", HttpStatus.OK);
+			}catch(JsonProcessingException exception){
+				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
+							
+			}catch(IllegalArgumentException exception){
+				return new ResponseEntity<>("provided data is invalid", HttpStatus.BAD_REQUEST);
+							
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+	
+		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);				
     }
     
 
@@ -336,6 +396,15 @@ public class AdminController {
         	
         	return new ResponseEntity<APIResponse<List<TransactionResponse>>>(new APIResponse<>("200",response,"OK"),HttpStatus.OK);
         
+    }
+
+
+
+	@PostMapping("/category/getAllCategoryName")
+    public ResponseEntity<List<Object[]>> getAllCategoryName(){
+		List<Object[]> list = adminService.getAllCategoryName();
+		System.out.println(list);
+		return new ResponseEntity<List<Object[]>>(list,HttpStatus.OK);
     }
     
 }

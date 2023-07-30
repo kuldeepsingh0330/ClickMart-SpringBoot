@@ -42,7 +42,6 @@ public class Product {
     private double price;
 
     @PositiveOrZero(message = "Discount must be a positive or zero value")
-    @Max(value = 100, message = "Discount cannot exceed 100")
     @Column(name = "discount")
     private double discount;
 
@@ -56,7 +55,6 @@ public class Product {
 
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
-    @NotEmpty(message = "At least one image is required")
     @Column(name = "image")
     private List<String> images;
 

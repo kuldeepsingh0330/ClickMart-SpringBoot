@@ -6,15 +6,180 @@ $(document).ready(function () {
     var data;
     var id = -1;
     var productdetailResponse;
+    var crousalLength;
+    var crousalCurrentPosition = 0;
+    var allCategoryName;
+
+
+    function getAllCategoryname(){
+        const jwtToken = getCookie("JWTtoken");
+        $.ajax({
+            url: "/admin/category/getAllCategoryName",
+            type: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + jwtToken
+            },
+            success: function (response) {
+                allCategoryName = response;
+            },
+            error: function (error) {
+                console.error('Error making POST request:', error);
+            }
+        });        
+    }
+
+    
 
     loadProduct();
-
-
-
+    getAllCategoryname();
 
     document.getElementById("closeform").addEventListener("click", closeForm);
+    document.getElementById("prevButton").addEventListener("click", prevButton);
+    document.getElementById("nextButton").addEventListener("click", nextButton);
+    document.getElementById("addCategory").addEventListener("click", addProductform);
+
+    $("#loadMore").on("click", function () {
+        loadCategory();
+      });
+
+    $("#closeaddCategoryform").on("click", function () {
+        document.getElementById("addCategorypopupForm").classList.remove("active");
+    });
 
 
+
+    document.getElementById("categoryForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const clickedButton = event.submitter;
+        if (clickedButton.id === "addProductButton") {
+            addCategoryDateCreate();
+        } else if (clickedButton.id === "updateProductButton") {
+            updateCategoryDateCreate();
+        }
+    });
+
+
+    function addCategoryDateCreate() {
+        const jwtToken = getCookie("JWTtoken");
+    
+        const categoryData = {
+            id: document.getElementById("producyCat").value
+        }
+    
+    
+        const productData = {
+            productId: id,
+          name: document.getElementById("categoryname").value,
+          description: document.getElementById("brief").value,
+          price: document.getElementById("catprice").value,
+          discount: document.getElementById("catDiscount").value,
+          quantity: document.getElementById("catQuantity").value,
+          available: document.getElementById("catIsAvailable").value,
+          category: categoryData,
+        };
+
+        const iconFileData = [];
+        for (let i = 0; i < document.getElementById("icon").files.length; i++) {
+            iconFileData[i] = document.getElementById("icon").files[i];
+        }
+    
+        // Create a new object to hold both category data and the icon file
+        const dataToSend = new FormData();
+        dataToSend.append("category", JSON.stringify(productData));
+        for (let i = 0; i < iconFileData.length; i++) {
+            dataToSend.append("iconFile", iconFileData[i]);
+        }
+        addProductRequest(dataToSend, "/admin/product/add", jwtToken);
+      }
+    
+    
+      function updateCategoryDateCreate() {
+        const jwtToken = getCookie("JWTtoken");
+        const categoryData = {
+            id: document.getElementById("producyCat").value
+        }
+    
+    
+        const productData = {
+            productId: id,
+          name: document.getElementById("categoryname").value,
+          description: document.getElementById("brief").value,
+          price: document.getElementById("catprice").value,
+          discount: document.getElementById("catDiscount").value,
+          quantity: document.getElementById("catQuantity").value,
+          available: document.getElementById("catIsAvailable").value,
+          category: categoryData,
+        };
+
+        const iconFileData = [];
+        for (let i = 0; i < document.getElementById("icon").files.length; i++) {
+            iconFileData[i] = document.getElementById("icon").files[i];
+        }
+    
+        // Create a new object to hold both category data and the icon file
+        const dataToSend = new FormData();
+        dataToSend.append("category", JSON.stringify(productData));
+        for (let i = 0; i < iconFileData.length; i++) {
+            dataToSend.append("iconFile", iconFileData[i]);
+          }
+        addProductRequest(dataToSend, "/admin/product/update", jwtToken);
+
+        
+    
+      }
+
+      function addProductRequest(dataToSend, urls, jwtToken) {
+        $.ajax({
+          url: urls,
+          type: "POST",
+          data: dataToSend,
+          processData: false,
+          contentType: false,
+          headers: {
+            'Authorization': 'Bearer ' + jwtToken
+          },
+          success: function (response) {
+            const al = alert(response);
+            document.getElementById("addCategorypopupForm").classList.remove("active");
+          },
+          error: function (error) {
+            alert("Error : " + error.responseText);
+            console.log(error.responseText);
+          }
+        });
+      }
+
+
+    function prevButton() {
+
+        let img = document.getElementsByClassName("carousel-item");
+
+        if (crousalCurrentPosition <= 0) {
+            crousalCurrentPosition = crousalLength - 1;
+            img[0].classList.remove("active");
+            img[crousalCurrentPosition].classList.add("active");
+        } else {
+            crousalCurrentPosition--;
+            img[crousalCurrentPosition + 1].classList.remove("active");
+            img[crousalCurrentPosition].classList.add("active");
+        }
+
+    }
+
+    function nextButton() {
+        let img = document.getElementsByClassName("carousel-item");
+        console.log(img);
+
+        if (crousalCurrentPosition >= crousalLength - 1) {
+            crousalCurrentPosition = 0;
+            img[crousalLength - 1].classList.remove("active");
+            img[0].classList.add("active");
+        } else {
+            crousalCurrentPosition++;
+            img[crousalCurrentPosition - 1].classList.remove("active");
+            img[crousalCurrentPosition].classList.add("active");
+        }
+    }
 
     // Function to open the pop-up form
     function openForm() {
@@ -61,7 +226,6 @@ $(document).ready(function () {
                 const response = res.data;
                 console.log(response)
 
-                initilizeCrousal(response.images);
                 document.getElementById("categoryId").textContent = response.productId;
                 document.getElementById("categoryName").textContent = response.name;
                 document.getElementById("categoryBrief").textContent = response.description;
@@ -69,7 +233,8 @@ $(document).ready(function () {
                 document.getElementById("discount").textContent = response.discount;
                 document.getElementById("categoryOfProduct").textContent = response.category.name;
                 document.getElementById("quantity").textContent = response.quantity;
-                id = response.id;
+                id = response.productId;
+
 
                 const visibilityText = document.getElementById("visibility");
                 if (response.available == true) {
@@ -80,6 +245,9 @@ $(document).ready(function () {
                     visibilityText.className = "value privateText";
                 }
 
+                crousalLength = response.images.length;
+                initilizeCrousal(response.images);
+
             },
             error: function (error) {
                 console.log(error);
@@ -87,42 +255,33 @@ $(document).ready(function () {
         });
     }
 
-    function initilizeCrousal(images){
+    function initilizeCrousal(images) {
 
         const indicatorsList = document.querySelector(".carousel-indicators");
         const carouselInner = document.querySelector(".carousel-inner");
+        carouselInner.innerHTML = "";
 
         for (let i = 0; i < images.length; i++) {
-            // Create a new indicator element
-            const newIndicator = document.createElement("li");
-            newIndicator.setAttribute("data-target", "#carouselExampleIndicators");
-            newIndicator.setAttribute("data-slide-to", i);
-            if (i === 0) {
-              newIndicator.classList.add("active");
-            }
-        
-            // Append the new indicator to the indicators list
-            indicatorsList.appendChild(newIndicator);
-        
+
             // Create a new carousel item (div) and image element
             const newCarouselItem = document.createElement("div");
             newCarouselItem.classList.add("carousel-item");
             if (i === 0) {
-              newCarouselItem.classList.add("active");
+                newCarouselItem.classList.add("active");
             }
             const newImage = document.createElement("img");
             newImage.classList.add("d-block", "w-100");
-            fetchImageByname(id,newImage,images[i]);
+
+            fetchImageByname(id, newImage, images[i]);
             newImage.setAttribute("alt", "Slide " + (i + 1));
-        
+            newImage.style.height = "500px";
+
             // Append the new image to the carousel item
             newCarouselItem.appendChild(newImage);
-        
+
             // Append the new carousel item to the carousel inner
             carouselInner.appendChild(newCarouselItem);
-          }
-        
-        //fetchImage(response.icon, categoryImage);
+        }
     }
 
 
@@ -135,11 +294,54 @@ $(document).ready(function () {
         // changeVisibilityModel = document.getElementById("chandeVisibilityModel");
 
 
-        //updateCategoryButton.addEventListener("click", updateCategoryform)
+        updateCategoryButton.addEventListener("click", updateProductform)
         // changeVisibilityButton.addEventListener("click", openModal);
         //deleteCategoryButton.addEventListener("click", deleteCategoryRequest);
 
     }
+
+    function updateProductform() {
+        document.getElementById("categoryForm").reset();
+        document.getElementById("updateProductButton").classList.remove("inactive");
+        document.getElementById("updateProductButton").classList.add("active");
+        document.getElementById("addProductButton").classList.remove("active");
+        document.getElementById("addProductButton").classList.add("inactive");
+        document.getElementById("addCategorypopupForm").classList.add("active");
+        document.getElementById("categoryname").value = productdetailResponse.name;
+        document.getElementById("brief").value = productdetailResponse.description;
+        document.getElementById("catprice").value = productdetailResponse.price;
+        document.getElementById("catQuantity").value = productdetailResponse.quantity;
+        document.getElementById("catIsAvailable").value = productdetailResponse.available;
+        document.getElementById("formTitleCategory").textContent = "Update Product";
+        document.getElementById("catDiscount").value = productdetailResponse.discount;
+        setSelectOptions();
+        document.getElementById("producyCat").value = productdetailResponse.category.id
+
+    }
+
+
+    function addProductform() {
+        document.getElementById("categoryForm").reset();
+        document.getElementById("updateProductButton").classList.remove("active");
+        document.getElementById("updateProductButton").classList.add("inactive");
+        document.getElementById("addProductButton").classList.remove("inactive");
+        document.getElementById("addProductButton").classList.add("active");
+        document.getElementById("addCategorypopupForm").classList.add("active");
+        document.getElementById("formTitleCategory").textContent = "Add Product";
+        setSelectOptions()
+
+    }
+
+    function setSelectOptions() {
+        const selectElement = $('#producyCat');
+    
+        selectElement.empty();
+    
+        $.each(allCategoryName, function(index, currCat) {
+          const optionElement = $('<option>').text(currCat[0]).val(currCat[1]);
+          selectElement.append(optionElement);
+        });
+      }
 
 
 
@@ -267,7 +469,7 @@ $(document).ready(function () {
         });
     }
 
-    function fetchImageByname(id, cardImage,imageName) {
+    function fetchImageByname(id, cardImage, imageName) {
         $.ajax({
             url: `/product/image/${id}/${imageName}`,
             method: 'GET',

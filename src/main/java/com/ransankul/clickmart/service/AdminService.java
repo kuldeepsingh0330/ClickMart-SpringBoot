@@ -26,7 +26,7 @@ public interface AdminService {
 	
 	public void removeProduct(int productId);
 	
-	public Product updateProduct(int productId, Product updatedProduct);
+	public Product updateProduct(Product updatedProduct);
 
 	public List<Transaction> getAllTransaction(String pageNumber);
 	
@@ -40,5 +40,7 @@ public interface AdminService {
 
 	public long getCountProduct();
 	public long getCountoutOfStockProduct();
+	public List<Object[]> getAllCategoryName();
+	public Product getProductByID(int categoryId);
 
 }
