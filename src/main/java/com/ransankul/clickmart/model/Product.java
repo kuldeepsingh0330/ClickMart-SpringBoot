@@ -3,6 +3,7 @@ package com.ransankul.clickmart.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -51,7 +52,7 @@ public class Product {
 
     @NotNull(message = "Availability flag is required")
     @Column(name = "is_available")
-    private boolean isAvailable;
+    private boolean available;
 
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
@@ -62,7 +63,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
     
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "orderedProduct")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "orderedProduct",cascade = CascadeType.ALL)
     private List<Transaction> orderedProduct = new ArrayList<>();
 
     public Product() {
@@ -70,14 +71,14 @@ public class Product {
     }
 
 
-    public Product(int productId, String name, double price, double discount, int quantity, boolean isAvailable,
+    public Product(int productId, String name, double price, double discount, int quantity, boolean available,
             ArrayList<String> images, Category category) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.discount = discount;
         this.quantity = quantity;
-        this.isAvailable = isAvailable;
+        this.available = available;
         this.images = images;
         this.category = category;
     }
@@ -115,30 +116,22 @@ public class Product {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean getAvailable() {
+        return available;
     }
-    public void setAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
+
+
     public List<String> getImages() {
         return images;
     }
     public void setImages(List<String> images) {
         this.images = images;
     }
-    
-    
-    
-
-
-    @Override
-	public String toString() {
-		return "Product [productId=" + productId + ", name=" + name + ", description=" + description + ", price="
-				+ price + ", discount=" + discount + ", quantity=" + quantity + ", isAvailable=" + isAvailable
-				+ ", images=" + images + ", category=" + category + ", orderedProduct=" + orderedProduct + "]";
-	}
-
 
 	public String getDescription() {
 		return description;

@@ -20,7 +20,7 @@ public interface ProductRepositery extends JpaRepository<Product,Integer>{
 
     long count();
     
-    long countByIsAvailableFalse(); 
+    long countByAvailableFalse(); 
     
     
     

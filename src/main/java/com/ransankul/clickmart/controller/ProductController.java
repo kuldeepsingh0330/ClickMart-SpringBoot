@@ -96,7 +96,7 @@ public class ProductController {
     
     @GetMapping("/image/{productId}")
     public ResponseEntity<Resource> productDisplayImage(@PathVariable int productId) throws MalformedURLException {
-    	String folderPath = path+"productImage"+File.separator+String.valueOf(productId);
+    	String folderPath = path+"productImage";
     	String imageName = productService.displayImage(productId);
     	
         Path imagePath = Paths.get(folderPath).resolve(imageName);
@@ -115,7 +115,7 @@ public class ProductController {
     
     @GetMapping("/image/{productId}/{imageName}")
     public ResponseEntity<Resource> getProductImageByName(@PathVariable int productId, @PathVariable String imageName) throws MalformedURLException {
-    	String folderPath = path+"productImage"+File.separator+String.valueOf(productId);
+    	String folderPath = path+"productImage";
     	
         Path imagePath = Paths.get(folderPath).resolve(imageName);
         Resource imageResource = new UrlResource(imagePath.toUri());

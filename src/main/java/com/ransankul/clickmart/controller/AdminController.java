@@ -47,6 +47,7 @@ import com.ransankul.clickmart.model.Category;
 import com.ransankul.clickmart.model.Product;
 import com.ransankul.clickmart.model.Transaction;
 import com.ransankul.clickmart.model.User;
+import com.ransankul.clickmart.payloads.TransactionAdminResponse;
 import com.ransankul.clickmart.payloads.TransactionResponse;
 import com.ransankul.clickmart.security.JWTAuthResponse;
 import com.ransankul.clickmart.security.JWTTokenHelper;
@@ -287,18 +288,14 @@ public class AdminController {
 				
 				Product pro = adminService.addProduct(product);
 
-				String folderPath = path+"productImage"+File.separator+String.valueOf(pro.getProductId());
-				File folder = new File(folderPath);
-				boolean created = folder.mkdirs();
+				String folderPath = path+"productImage";
 
 				for(MultipartFile file : iconFile){
 					String fileName = file.getOriginalFilename();
 
-					if(created){
 					Path filePath = Paths.get(folderPath, fileName);
 					Files.write(filePath, file.getBytes());
 					fileNameList.add(fileName);
-					}else throw new Exception();
 				}
 				pro.setImages(fileNameList);
 	
@@ -333,6 +330,27 @@ public class AdminController {
         return new ResponseEntity<>("Product removed successfully", HttpStatus.OK);
     }
 
+	@PutMapping("category/ava/{productId}")
+	public ResponseEntity<String> changeProductAvailibality(
+		@PathVariable int productId) {
+		boolean isChange = adminService.changeProductAvailibality(productId);
+		if(isChange)
+	    return new ResponseEntity<>("Product Availability changed successfully", HttpStatus.OK);
+		else
+	    return new ResponseEntity<>("Something went wrong", HttpStatus.OK);
+	}
+	
+
+	@PutMapping("category/qua/{productId}/{quantity}")
+	public ResponseEntity<String> addMoreProductQuantity(
+		@PathVariable int productId,@PathVariable int quantity) {
+		boolean isChange = adminService.addMoreProductQuantity(productId, quantity);
+		if(isChange)
+	    return new ResponseEntity<>("Quantity added successfully", HttpStatus.OK);
+		else
+	    return new ResponseEntity<>("Something went wrong", HttpStatus.OK);
+	}
+	
 
 	@PostMapping("product/update")
     public ResponseEntity<String> updateProduct(@RequestParam("category") String cat, @RequestParam("iconFile") List<MultipartFile> iconFile) {
@@ -344,7 +362,7 @@ public class AdminController {
 
 				for(MultipartFile file : iconFile){
 					String fileName = file.getOriginalFilename();
-					String folderPath = path+"productImage"+File.separator+String.valueOf(product.getProductId());
+					String folderPath = path+"productImage";
 					Path filePath = Paths.get(folderPath, fileName);
 					Files.write(filePath, file.getBytes());
 					fileNameList.add(fileName);
@@ -368,36 +386,6 @@ public class AdminController {
 	
 		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);				
     }
-    
-
-	//Transaction && Order
-
-	@PostMapping("/order/{pageNumber}")
-    public ResponseEntity<APIResponse<List<TransactionResponse>>> getAllPayments(@PathVariable String pageNumber,HttpServletRequest request){
-        	List<Transaction> list = adminService.getAllTransaction(pageNumber);
-        	List<TransactionResponse> response = new ArrayList<>();
-        	for(Transaction tr : list) {
-        		String status = tr.getStatus();
-        		Date orderTime = tr.getCreated_at();
-        		String transactionId = tr.getOrder_id();
-        		
-        		for(Product p : tr.getOrderedProduct()) {
-        			TransactionResponse tResponse = new TransactionResponse();
-        			tResponse.setImageName(p.getImages().get(0));
-        			tResponse.setProductId(String.valueOf(p.getProductId()));
-        			tResponse.setProductName(p.getName());
-        			tResponse.setOrderTime(orderTime);
-        			tResponse.setPaymentStatus(status);
-        			tResponse.setTransactionId(transactionId);
-        			
-        			response.add(tResponse);
-        		}
-        	}
-        	
-        	return new ResponseEntity<APIResponse<List<TransactionResponse>>>(new APIResponse<>("200",response,"OK"),HttpStatus.OK);
-        
-    }
-
 
 
 	@PostMapping("/category/getAllCategoryName")
@@ -406,5 +394,61 @@ public class AdminController {
 		System.out.println(list);
 		return new ResponseEntity<List<Object[]>>(list,HttpStatus.OK);
     }
+    
+
+	//Transaction && Order
+
+	@PostMapping("/order/{pageNumber}")
+    public ResponseEntity<APIResponse<List<TransactionAdminResponse>>> getAllPayments(@PathVariable String pageNumber){
+        	List<Transaction> list = adminService.getAllTransaction(pageNumber);
+			List<TransactionAdminResponse> responsesData = new ArrayList<>();
+			for(Transaction tr : list){
+				TransactionAdminResponse curr = new TransactionAdminResponse();
+				curr.setId(tr.getId());
+				curr.setAmount(tr.getAmount());
+				curr.setAmount_paid(tr.getAmount_paid());
+				curr.setNotes(tr.getNotes());
+				curr.setCreated_at(tr.getCreated_at());
+				curr.setAmount_due(tr.getAmount_due());
+				curr.setCurrency(tr.getCurrency());
+				curr.setReceipt(tr.getReceipt());
+				curr.setEntity(tr.getEntity());
+				curr.setOrder_id(tr.getOrder_id());
+				curr.setOffer_id(tr.getOffer_id());
+				curr.setStatus(tr.getStatus());
+				curr.setAttempts(tr.getAttempts());
+				curr.setPaymentId(tr.getPaymentId());
+				curr.setUser_id(tr.getUser().getId());
+				curr.setUser_phoneNumber(String.valueOf(tr.getUser().getPhoneNumber()));
+				curr.setUser_name(tr.getUser().getName());
+				curr.setUser_emailId(tr.getUser().getEmailId());
+				curr.setUsername(tr.getUser().getUsername());
+
+				responsesData.add(curr);
+			}
+        	
+        	return new ResponseEntity<APIResponse<List<TransactionAdminResponse>>>(new APIResponse<>("200",responsesData,"OK"),HttpStatus.OK);
+        
+    }
+
+
+	        	// List<TransactionResponse> response = new ArrayList<>();
+        	// for(Transaction tr : list) {
+        	// 	String status = tr.getStatus();
+        	// 	Date orderTime = tr.getCreated_at();
+        	// 	String transactionId = tr.getOrder_id();
+        		
+        	// 	for(Product p : tr.getOrderedProduct()) {
+        	// 		TransactionResponse tResponse = new TransactionResponse();
+        	// 		tResponse.setImageName(p.getImages().get(0));
+        	// 		tResponse.setProductId(String.valueOf(p.getProductId()));
+        	// 		tResponse.setProductName(p.getName());
+        	// 		tResponse.setOrderTime(orderTime);
+        	// 		tResponse.setPaymentStatus(status);
+        	// 		tResponse.setTransactionId(transactionId);
+        			
+        	// 		response.add(tResponse);
+        	// 	}
+        	// }
     
 }

@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
 
+    var changeAvailabilityModel;
+    var quantityModel;
     var pageNumber = 0;
     var listItems;
     var data;
@@ -9,6 +11,7 @@ $(document).ready(function () {
     var crousalLength;
     var crousalCurrentPosition = 0;
     var allCategoryName;
+    var isChange = false;
 
 
     function getAllCategoryname(){
@@ -39,7 +42,7 @@ $(document).ready(function () {
     document.getElementById("addCategory").addEventListener("click", addProductform);
 
     $("#loadMore").on("click", function () {
-        loadCategory();
+        loadProduct();
       });
 
     $("#closeaddCategoryform").on("click", function () {
@@ -140,7 +143,10 @@ $(document).ready(function () {
           },
           success: function (response) {
             const al = alert(response);
+            isChange = true;
             document.getElementById("addCategorypopupForm").classList.remove("active");
+            document.getElementById("popupForm").classList.remove("active");
+            closeForm();
           },
           error: function (error) {
             alert("Error : " + error.responseText);
@@ -188,11 +194,15 @@ $(document).ready(function () {
     }
 
     function closeForm() {
-        document.getElementById("cardContainer").innerHTML = "";
-        let pn = pageNumber;
-        for (let i = 0; i < pn; i++) {
-            pageNumber = i;
-            loadProduct();
+        if(isChange){
+            document.getElementById("cardContainer").innerHTML = "";
+            let pn = pageNumber;
+            for (let i = 0; i < pn; i++) {
+                pageNumber = i;
+                console.log(pageNumber);
+                loadProduct();
+            }
+            isChange = false;
         }
         document.getElementById("popupForm").classList.remove("active");
     }
@@ -288,16 +298,12 @@ $(document).ready(function () {
     function initilizeButtons() {
 
 
-        const updateCategoryButton = document.getElementById("updateCategoryButton");
-        const deleteCategoryButton = document.getElementById("deleteCategoryButton");
-        const changeVisibilityButton = document.getElementById("changeVisibilityButton");
-        // changeVisibilityModel = document.getElementById("chandeVisibilityModel");
-
-
-        updateCategoryButton.addEventListener("click", updateProductform)
-        // changeVisibilityButton.addEventListener("click", openModal);
-        //deleteCategoryButton.addEventListener("click", deleteCategoryRequest);
-
+        document.getElementById("updateCategoryButton").addEventListener("click", updateProductform);
+        document.getElementById("deleteCategoryButton").addEventListener("click", deleteProductRequest);
+        document.getElementById("addMoreQuantityButton").addEventListener("click", openQuantityModel);
+        document.getElementById("changeVisibilityButton").addEventListener("click", openModal);
+        changeAvailabilityModel = document.getElementById("chandeVisibilityModel");
+        quantityModel = document.getElementById("quantityInputModal");
     }
 
     function updateProductform() {
@@ -319,6 +325,99 @@ $(document).ready(function () {
 
     }
 
+    function deleteProductRequest() {
+
+        const result = window.confirm("Are you sure to delete this product");
+    
+        if (result) {
+          const jwtToken = getCookie("JWTtoken");
+    
+          $.ajax({
+            url: `/admin/product/rm/${id}`,
+            type: 'DELETE',
+            contentType: 'application/json',
+            headers: {
+              'Authorization': 'Bearer ' + jwtToken
+            },
+            success: function (response) {
+              if (id == 1) id++;
+              else id--;
+              isChange = true;
+              closeForm();
+    
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          });
+        }
+      }
+
+    function openQuantityModel() {
+        closeForm();
+        document.getElementById("closeModelQuantityButton").addEventListener("click", closeModal);
+        document.getElementById("addQuantityButton").addEventListener("click", addQuantityRequest);
+        document.getElementById("modalBody").textContent = "Are you sure to change the availability of Product.";
+        $(quantityModel).modal("show");
+    }
+
+    function openModal() {
+        closeForm();
+        document.getElementById("closeConfirmVisibility").addEventListener("click", closeModal);
+        document.getElementById("confirmChangeVisibilityBtn").addEventListener("click", changeVisibilityRequest);
+        document.getElementById("modalBody").textContent = "Are you sure to change the availability of Product.";
+        $(changeAvailabilityModel).modal("show");
+    }
+
+      function closeModal() {
+        $(changeAvailabilityModel).modal("hide");
+        $(quantityModel).modal("hide");
+        openForm();
+      }
+
+      function addQuantityRequest() {
+        let quantity = document.getElementById("quantityInput").value;
+        closeModal();
+        const jwtToken = getCookie("JWTtoken");
+    
+        $.ajax({
+          url: `/admin/category/qua/${id}/${quantity}`,
+          type: 'PUT',
+          contentType: 'application/json',
+          headers: {
+            'Authorization': 'Bearer ' + jwtToken
+          },
+          success: function (response) {
+            loadProductDetail();
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        });
+    
+      }
+
+      function changeVisibilityRequest() {
+        closeModal();
+        const jwtToken = getCookie("JWTtoken");
+    
+        $.ajax({
+          url: `/admin/category/ava/${id}`,
+          type: 'PUT',
+          contentType: 'application/json',
+          headers: {
+            'Authorization': 'Bearer ' + jwtToken
+          },
+          success: function (response) {
+            isChange = true;
+            loadProductDetail();
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        });
+    
+      }
 
     function addProductform() {
         document.getElementById("categoryForm").reset();

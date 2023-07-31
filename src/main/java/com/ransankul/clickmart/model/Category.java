@@ -1,10 +1,14 @@
 package com.ransankul.clickmart.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -42,6 +46,9 @@ public class Category {
     @NotNull(message = "Public flag is required")
     @Column(name = "is_public")
     private boolean isPublic;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
+    private List<Product> product;
 
     public Category() {
         // Default constructor required by Hibernate

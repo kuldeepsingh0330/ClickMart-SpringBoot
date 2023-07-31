@@ -115,7 +115,7 @@
           <div class="buttonDiv">
             <button type="button" class="btn btn-primary m-4" id="updateCategoryButton">Update Product</button>
             <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Change Availibality</button>
-            <button type="button" class="btn btn-success m-4" id="changeVisibilityButton">Update Quantity</button>
+            <button type="button" class="btn btn-success m-4" id="addMoreQuantityButton">Add more Quantity</button>
             <button type="button" class="btn btn-danger m-4" id="deleteCategoryButton">Delete</button>
           </div>
   
@@ -196,6 +196,42 @@
                 </form>
   
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="chandeVisibilityModel">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Change Product Availibality</h5>
+            </div>
+            <div class="modal-body" id="modalBody">
+              This is the content of the modal.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" id="closeConfirmVisibility">Close</button>
+              <button type="button" class="btn btn-primary" id="confirmChangeVisibilityBtn">Change</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" id="quantityInputModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add more Quantity</h5>
+            </div>
+            <div class="modal-body">
+              <label for="numberInput">Enter Quantity:</label>
+              <input type="number" id="quantityInput" class="form-control" min="1" step="1" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModelQuantityButton">Close</button>
+              <button type="button" class="btn btn-primary" id="addQuantityButton">Add</button>
             </div>
           </div>
         </div>

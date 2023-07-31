@@ -40,6 +40,19 @@ public class Transaction {
     private int attempts;
     private int addressId;
     private String paymentId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "ordered_product",
+    joinColumns=@JoinColumn(name="transaction",referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name="product",referencedColumnName = "product_id")
+    )
+    private List<Product> orderedProduct = new ArrayList<>();
+    
     
     
     
@@ -64,21 +77,6 @@ public class Transaction {
 	public void setPaymentId(String paymentId) {
 		this.paymentId = paymentId;
 	}
-
-
-
-	@ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    
-    
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "ordered_product",
-    joinColumns=@JoinColumn(name="transaction",referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name="product",referencedColumnName = "product_id")
-    )
-    private List<Product> orderedProduct = new ArrayList<>();
-    
 
     public User getUser() {
 		return user;

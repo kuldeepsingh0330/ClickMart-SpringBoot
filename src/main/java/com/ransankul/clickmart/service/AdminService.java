@@ -42,5 +42,7 @@ public interface AdminService {
 	public long getCountoutOfStockProduct();
 	public List<Object[]> getAllCategoryName();
 	public Product getProductByID(int categoryId);
+	public boolean changeProductAvailibality(int productId);
+	public boolean addMoreProductQuantity(int productId,int quantity);
 
 }

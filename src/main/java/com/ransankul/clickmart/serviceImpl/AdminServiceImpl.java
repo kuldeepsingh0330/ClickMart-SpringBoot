@@ -145,7 +145,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public long getCountoutOfStockProduct() {
-		return productRepositery.countByIsAvailableFalse();
+		return productRepositery.countByAvailableFalse();
 	}
 
 	@Override
@@ -159,6 +159,31 @@ public class AdminServiceImpl implements AdminService {
 
 		return categoryRepositery.getAllCategoryNameandId();
 
+	}
+
+	@Override
+	public boolean changeProductAvailibality(int productId){
+		Product pro = productRepositery.findById(productId).get();
+		
+        if(pro != null){
+			pro.setAvailable(!pro.getAvailable());
+        	productRepositery.save(pro); 
+			return true;       	
+        }
+		return false;
+	}
+
+	@Override
+	public boolean addMoreProductQuantity(int productId, int quantity){
+		Product pro = productRepositery.findById(productId).get();
+		
+        if(pro != null) {
+			int q = pro.getQuantity()+quantity;
+			pro.setQuantity(q);
+        	productRepositery.save(pro);   
+			return true;     	
+        }
+		return false;
 	}
 
 }

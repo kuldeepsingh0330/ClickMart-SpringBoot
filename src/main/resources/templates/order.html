@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org" th:replace="base::baselayout(~{::section})">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" th:replace="~{base::baselayout(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,9 @@
 <body>
     <section>
         <h1>This is Order Page</h1>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/javascript/order.js"></script>
     </section>
 </body>
 </html>

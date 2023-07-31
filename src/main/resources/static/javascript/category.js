@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-
+  var isChange = false;
   var changeVisibilityModel;
   var isPublic;
   var id = -1;
@@ -43,7 +43,7 @@ $(document).ready(function () {
     const clickedButton = event.submitter;
     if (clickedButton.id === "addCategoryButton") {
       addCategoryDateCreate();
-    } else if (clickedButton.id === "updateCategoryButton") {
+    } else if (clickedButton.id === "updateCategoryButtonadd") {
       updateCategoryDateCreate();
     }
   });
@@ -180,7 +180,9 @@ $(document).ready(function () {
       },
       success: function (response) {
         const al = alert(response);
+        isChange = true;
         document.getElementById("addCategorypopupForm").classList.remove("active");
+        closeForm();
       },
       error: function (error) {
         alert("Error : " + error.responseText);
@@ -200,11 +202,14 @@ $(document).ready(function () {
 
   // Function to close the pop-up form
   function closeForm() {
-    document.getElementById("cardContainer").innerHTML = "";
-    let pn = pageNumber;
-    for (let i = 0; i < pn; i++) {
-      pageNumber = i;
-      loadCategory();
+    if(isChange){
+      document.getElementById("cardContainer").innerHTML = "";
+      let pn = pageNumber;
+      for (let i = 0; i < pn; i++) {
+        pageNumber = i;
+        loadCategory();
+      }
+      isChange = false;
     }
     document.getElementById("popupForm").classList.remove("active");
   }
@@ -322,7 +327,8 @@ $(document).ready(function () {
         'Authorization': 'Bearer ' + jwtToken
       },
       success: function (response) {
-        closeForm();
+        isChange = true;
+        loadCategoryDetail();
       },
       error: function (error) {
         console.log(error);
@@ -348,6 +354,7 @@ $(document).ready(function () {
         success: function (response) {
           if (id == 1) id++;
           else id--;
+          isChange = true;
           closeForm();
 
         },
