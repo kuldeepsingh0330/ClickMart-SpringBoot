@@ -44,6 +44,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.model.APIResponse;
 import com.ransankul.clickmart.model.Category;
+import com.ransankul.clickmart.model.Feedback;
+import com.ransankul.clickmart.model.Help;
 import com.ransankul.clickmart.model.Product;
 import com.ransankul.clickmart.model.Transaction;
 import com.ransankul.clickmart.model.User;
@@ -63,234 +65,236 @@ import jakarta.validation.Valid;
 @RequestMapping("/admin")
 // @PreAuthorize("hasRole('ROLE_ADMIN_USER')")
 public class AdminController {
-	
+
 	@Autowired
 	private AdminService adminService;
 
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	@Autowired
-    private UserDetailsService userDetailsService;
+	private AuthenticationManager manager;
 
-    @Autowired
-    private AuthenticationManager manager;
-
-    @Autowired
-    private JWTTokenHelper jwtTokenHelper;
+	@Autowired
+	private JWTTokenHelper jwtTokenHelper;
 
 	@Autowired
 	private ObjectMapper mapper;
 	@Value("${project.image}")
-    private String path;
+	private String path;
 
 	@RequestMapping("/home")
-	public String home(Model m){
-		m.addAttribute("title","Home - ClickMart");
+	public String home(Model m) {
+		m.addAttribute("title", "Home - ClickMart");
 		return "/home";
 	}
-    
-    @RequestMapping("/login")
-	public String login(Model m){
-		m.addAttribute("title","Login - ClickMart");
+
+	@RequestMapping("/login")
+	public String login(Model m) {
+		m.addAttribute("title", "Login - ClickMart");
 		return "login";
 	}
 
 	@RequestMapping("/category")
-	public String category(Model m){
-		m.addAttribute("totalCategory","50");
-		m.addAttribute("title","Categoey - ClickMart");
-		m.addAttribute("count",adminService.getCount());
-		m.addAttribute("countPublic",adminService.getCountPublic());
-		m.addAttribute("countPrivate",adminService.getCountPrivate());
+	public String category(Model m) {
+		m.addAttribute("totalCategory", "50");
+		m.addAttribute("title", "Categoey - ClickMart");
+		m.addAttribute("count", adminService.getCount());
+		m.addAttribute("countPublic", adminService.getCountPublic());
+		m.addAttribute("countPrivate", adminService.getCountPrivate());
 		return "category";
 	}
 
 	@RequestMapping("/product")
-	public String product(Model m){
-		m.addAttribute("title","Product - ClickMart");
-		m.addAttribute("count",adminService.getCountProduct());
-		m.addAttribute("outofstock",adminService.getCountoutOfStockProduct());
+	public String product(Model m) {
+		m.addAttribute("title", "Product - ClickMart");
+		m.addAttribute("count", adminService.getCountProduct());
+		m.addAttribute("outofstock", adminService.getCountoutOfStockProduct());
 		return "product";
 	}
 
 	@RequestMapping("/order")
-	public String order(Model m){
-		m.addAttribute("title","Order - ClickMart");
+	public String order(Model m) {
+		m.addAttribute("title", "Order - ClickMart");
 		return "order";
 	}
 
 	@RequestMapping("/feedback")
-	public String feedback(Model m){
-		m.addAttribute("title","Feedback - ClickMart");
+	public String feedback(Model m) {
+		m.addAttribute("title", "Feedback - ClickMart");
 		return "feedback";
 	}
 
 	@RequestMapping("/help")
-	public String help(Model m){
-		m.addAttribute("title","Help - ClickMart");
+	public String help(Model m) {
+		m.addAttribute("title", "Help - ClickMart");
 		return "help";
 	}
-
 
 	// vallidation
 
 	@RequestMapping(path = "/login/token", method = RequestMethod.POST)
-    public String login(HttpServletRequest request,Model m, HttpServletResponse response){
+	public String login(HttpServletRequest request, Model m, HttpServletResponse response) {
 
-    	String username = request.getParameter("username");
-    	String password = request.getParameter("password");
-        this.doAuthenticate(username,password);
-        
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        String token = this.jwtTokenHelper.generateToken(userDetails);
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		this.doAuthenticate(username, password);
+
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		String token = this.jwtTokenHelper.generateToken(userDetails);
 		Cookie c = new Cookie("JWTtoken", token);
 		c.setMaxAge(-1);
 		c.setPath("/");
 		response.addCookie(c);
-        
-        return "redirect:/admin/redirect";
-    }
+
+		return "redirect:/admin/redirect";
+	}
 
 	@RequestMapping(path = "/redirect")
-    public String redirect(HttpServletRequest request){
+	public String redirect(HttpServletRequest request) {
 		return "redirect";
-    }
+	}
 
-    private void doAuthenticate(String username, String password){
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,password);
-        try{
-            manager.authenticate(authentication);
-        }catch(BadCredentialsException e){
-            throw new RuntimeException("Invalid username and password");
-        }
-    }
-    
-    @PostMapping("/category/{categoryId}")
-    public ResponseEntity<Category> getCategoryByID(@PathVariable int categoryId) {
-        Category category = adminService.getCategoryByID(categoryId);
-        if (category != null) {
-            return ResponseEntity.ok(category);
-        } else {
-            throw new ResourceNotFoundException("No category found with this ID" + categoryId);
-        }
-    }
+	private void doAuthenticate(String username, String password) {
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
+				password);
+		try {
+			manager.authenticate(authentication);
+		} catch (BadCredentialsException e) {
+			throw new RuntimeException("Invalid username and password");
+		}
+	}
+
+	@PostMapping("/category/{categoryId}")
+	public ResponseEntity<Category> getCategoryByID(@PathVariable int categoryId) {
+		Category category = adminService.getCategoryByID(categoryId);
+		if (category != null) {
+			return ResponseEntity.ok(category);
+		} else {
+			throw new ResourceNotFoundException("No category found with this ID" + categoryId);
+		}
+	}
 
 	@PostMapping("/category/add")
-	public ResponseEntity<String> addCategory(@RequestParam("category") String cat, @RequestParam("iconFile") MultipartFile iconFile) {
+	public ResponseEntity<String> addCategory(@RequestParam("category") String cat,
+			@RequestParam("iconFile") MultipartFile iconFile) {
 
 		if (!iconFile.isEmpty()) {
 			try {
-				
-				Category category = mapper.readValue(cat,Category.class);
+
+				Category category = mapper.readValue(cat, Category.class);
 				String fileName = iconFile.getOriginalFilename();
-				Path filePath = Paths.get(path+File.separator+"categoryImage", fileName);
+				Path filePath = Paths.get(path + File.separator + "categoryImage", fileName);
 				Files.write(filePath, iconFile.getBytes());
-	
+
 				category.setIcon(fileName);
 				adminService.addCategory(category);
 				return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
-			}catch(JsonProcessingException exception){
+			} catch (JsonProcessingException exception) {
 				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
-							
-			}catch(IllegalArgumentException exception){
+
+			} catch (IllegalArgumentException exception) {
 				return new ResponseEntity<>("Category already exist with this name", HttpStatus.BAD_REQUEST);
-							
-			}
-			catch (Exception e) {
+
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-	
+
 		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);
 	}
 
 	@PostMapping("/category/update")
-	public ResponseEntity<String> updateCategory(@RequestParam("category") String cat, @RequestParam("iconFile") MultipartFile iconFile) {
+	public ResponseEntity<String> updateCategory(@RequestParam("category") String cat,
+			@RequestParam("iconFile") MultipartFile iconFile) {
 
 		if (!iconFile.isEmpty()) {
 			try {
-				
-				Category category = mapper.readValue(cat,Category.class);
-				if(category.getId() == 0) throw new IllegalArgumentException();
+
+				Category category = mapper.readValue(cat, Category.class);
+				if (category.getId() == 0)
+					throw new IllegalArgumentException();
 				String fileName = iconFile.getOriginalFilename();
-				Path filePath = Paths.get(path+File.separator+"categoryImage", fileName);
+				Path filePath = Paths.get(path + File.separator + "categoryImage", fileName);
 				Files.write(filePath, iconFile.getBytes());
 
 				Category existCategory = adminService.getCategoryByID(category.getId());
 				category.setCreatedAt(existCategory.getCreatedAt());
 				category.setLastUpdate(System.currentTimeMillis());
 				category.setIcon(fileName);
-				
+
 				adminService.updateCategory(category);
 				return new ResponseEntity<>("Category updated succesfully", HttpStatus.OK);
-			}catch(JsonProcessingException exception){
+			} catch (JsonProcessingException exception) {
 				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
-							
-			}catch(IllegalArgumentException exception){
+
+			} catch (IllegalArgumentException exception) {
 				return new ResponseEntity<>("provided data is invalid", HttpStatus.BAD_REQUEST);
-							
-			}
-			catch (Exception e) {
+
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-	
+
 		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);
 
-	}	
+	}
 
 	@PostMapping("/category/all/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Category>>> getCategory(@PathVariable String pageNumber) {
 		List<Category> cat = adminService.getCategory(Integer.parseInt(pageNumber));
-		if(cat.isEmpty()){
-			return new ResponseEntity<APIResponse<List<Category>>>(new APIResponse<>("201", null, "No category found"), HttpStatus.OK);
+		if (cat.isEmpty()) {
+			return new ResponseEntity<APIResponse<List<Category>>>(new APIResponse<>("201", null, "No category found"),
+					HttpStatus.OK);
 		}
-		
-		APIResponse<List<Category>> response = new APIResponse("200",cat,"");
+
+		APIResponse<List<Category>> response = new APIResponse("200", cat, "");
 		return new ResponseEntity<APIResponse<List<Category>>>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping("category/rm/{categoryId}")
 	public ResponseEntity<String> removeCategory(@PathVariable int categoryId) {
 		adminService.removeCategory(categoryId);
-	    return new ResponseEntity<>("Category removed successfully", HttpStatus.OK);
+		return new ResponseEntity<>("Category removed successfully", HttpStatus.OK);
 	}
 
 	@PutMapping("category/vis/{categoryId}")
 	public ResponseEntity<String> changeCategoryVisibility(
-		@PathVariable int categoryId) {
+			@PathVariable int categoryId) {
 		adminService.changeCategoryVisibility(categoryId);
-	        return new ResponseEntity<>("Category visibility changed successfully", HttpStatus.OK);
+		return new ResponseEntity<>("Category visibility changed successfully", HttpStatus.OK);
 	}
-	
-	
-	//PRODUCTS-----------------------
+
+	// PRODUCTS-----------------------
 
 	@PostMapping("/product/all/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Category>>> getProduct(@PathVariable String pageNumber) {
 		List<Product> product = adminService.getProduct(Integer.parseInt(pageNumber));
-		if(product.isEmpty()){
-			return new ResponseEntity<APIResponse<List<Category>>>(new APIResponse<>("201", null, "No product found"), HttpStatus.OK);
+		if (product.isEmpty()) {
+			return new ResponseEntity<APIResponse<List<Category>>>(new APIResponse<>("201", null, "No product found"),
+					HttpStatus.OK);
 		}
-		
-		APIResponse<List<Category>> response = new APIResponse("200",product,"");
+
+		APIResponse<List<Category>> response = new APIResponse("200", product, "");
 		return new ResponseEntity<APIResponse<List<Category>>>(response, HttpStatus.OK);
 	}
-	
-    @PostMapping("/product/add")
-    public ResponseEntity<String> addProduct(@RequestParam("category") String cat, @RequestParam("iconFile") List<MultipartFile> iconFile) {
+
+	@PostMapping("/product/add")
+	public ResponseEntity<String> addProduct(@RequestParam("category") String cat,
+			@RequestParam("iconFile") List<MultipartFile> iconFile) {
 		if (!iconFile.isEmpty()) {
 			try {
-				
-				Product product = mapper.readValue(cat,Product.class);
+
+				Product product = mapper.readValue(cat, Product.class);
 				List<String> fileNameList = new ArrayList<>();
-				
+
 				Product pro = adminService.addProduct(product);
 
-				String folderPath = path+"productImage";
+				String folderPath = path + "productImage";
 
-				for(MultipartFile file : iconFile){
+				for (MultipartFile file : iconFile) {
 					String fileName = file.getOriginalFilename();
 
 					Path filePath = Paths.get(folderPath, fileName);
@@ -298,157 +302,190 @@ public class AdminController {
 					fileNameList.add(fileName);
 				}
 				pro.setImages(fileNameList);
-	
+
 				adminService.updateProduct(pro);
 				return new ResponseEntity<>("Product added successfully", HttpStatus.CREATED);
-			}catch(JsonProcessingException exception){
+			} catch (JsonProcessingException exception) {
 				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
-							
-			}catch(IllegalArgumentException exception){
+
+			} catch (IllegalArgumentException exception) {
 				return new ResponseEntity<>("Category already exist with this name", HttpStatus.BAD_REQUEST);
-							
-			}
-			catch (Exception e) {
+
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-	
-		return new ResponseEntity<>("Images is required", HttpStatus.BAD_REQUEST);
-    }
 
+		return new ResponseEntity<>("Images is required", HttpStatus.BAD_REQUEST);
+	}
 
 	@PostMapping("/product/{id}")
-    public ResponseEntity<APIResponse<Product>> getProductById(@PathVariable int id) {
-        Product product = adminService.getProductById(id);
-        return new ResponseEntity<APIResponse<Product>>(new APIResponse<>("201", product, ""), HttpStatus.CREATED);
-    }
+	public ResponseEntity<APIResponse<Product>> getProductById(@PathVariable int id) {
+		Product product = adminService.getProductById(id);
+		return new ResponseEntity<APIResponse<Product>>(new APIResponse<>("201", product, ""), HttpStatus.CREATED);
+	}
 
-    @DeleteMapping("product/rm/{productId}")
-    public ResponseEntity<String> removeProduct(@PathVariable int productId) {
-    	adminService.removeProduct(productId);
-        return new ResponseEntity<>("Product removed successfully", HttpStatus.OK);
-    }
+	@DeleteMapping("product/rm/{productId}")
+	public ResponseEntity<String> removeProduct(@PathVariable int productId) {
+		adminService.removeProduct(productId);
+		return new ResponseEntity<>("Product removed successfully", HttpStatus.OK);
+	}
 
 	@PutMapping("category/ava/{productId}")
 	public ResponseEntity<String> changeProductAvailibality(
-		@PathVariable int productId) {
+			@PathVariable int productId) {
 		boolean isChange = adminService.changeProductAvailibality(productId);
-		if(isChange)
-	    return new ResponseEntity<>("Product Availability changed successfully", HttpStatus.OK);
+		if (isChange)
+			return new ResponseEntity<>("Product Availability changed successfully", HttpStatus.OK);
 		else
-	    return new ResponseEntity<>("Something went wrong", HttpStatus.OK);
+			return new ResponseEntity<>("Something went wrong", HttpStatus.OK);
 	}
-	
 
 	@PutMapping("category/qua/{productId}/{quantity}")
 	public ResponseEntity<String> addMoreProductQuantity(
-		@PathVariable int productId,@PathVariable int quantity) {
+			@PathVariable int productId, @PathVariable int quantity) {
 		boolean isChange = adminService.addMoreProductQuantity(productId, quantity);
-		if(isChange)
-	    return new ResponseEntity<>("Quantity added successfully", HttpStatus.OK);
+		if (isChange)
+			return new ResponseEntity<>("Quantity added successfully", HttpStatus.OK);
 		else
-	    return new ResponseEntity<>("Something went wrong", HttpStatus.OK);
+			return new ResponseEntity<>("Something went wrong", HttpStatus.OK);
 	}
-	
 
 	@PostMapping("product/update")
-    public ResponseEntity<String> updateProduct(@RequestParam("category") String cat, @RequestParam("iconFile") List<MultipartFile> iconFile) {
-    	if (!iconFile.isEmpty()) {
-			try {				
-				Product product = mapper.readValue(cat,Product.class);
-				if(product.getProductId() == 0) throw new IllegalArgumentException();
+	public ResponseEntity<String> updateProduct(@RequestParam("category") String cat,
+			@RequestParam("iconFile") List<MultipartFile> iconFile) {
+		if (!iconFile.isEmpty()) {
+			try {
+				Product product = mapper.readValue(cat, Product.class);
+				if (product.getProductId() == 0)
+					throw new IllegalArgumentException();
 				List<String> fileNameList = new ArrayList<>();
 
-				for(MultipartFile file : iconFile){
+				for (MultipartFile file : iconFile) {
 					String fileName = file.getOriginalFilename();
-					String folderPath = path+"productImage";
+					String folderPath = path + "productImage";
 					Path filePath = Paths.get(folderPath, fileName);
 					Files.write(filePath, file.getBytes());
 					fileNameList.add(fileName);
 				}
 				product.setImages(fileNameList);
-				
-				adminService.updateProduct(product);				
+
+				adminService.updateProduct(product);
 				return new ResponseEntity<>("Product updated succesfully", HttpStatus.OK);
-			}catch(JsonProcessingException exception){
+			} catch (JsonProcessingException exception) {
 				return new ResponseEntity<>("provided invalid data", HttpStatus.BAD_REQUEST);
-							
-			}catch(IllegalArgumentException exception){
+
+			} catch (IllegalArgumentException exception) {
 				return new ResponseEntity<>("provided data is invalid", HttpStatus.BAD_REQUEST);
-							
-			}
-			catch (Exception e) {
+
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-	
-		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);				
-    }
 
+		return new ResponseEntity<>("Icon file is empty", HttpStatus.BAD_REQUEST);
+	}
 
 	@PostMapping("/category/getAllCategoryName")
-    public ResponseEntity<List<Object[]>> getAllCategoryName(){
+	public ResponseEntity<List<Object[]>> getAllCategoryName() {
 		List<Object[]> list = adminService.getAllCategoryName();
-		System.out.println(list);
-		return new ResponseEntity<List<Object[]>>(list,HttpStatus.OK);
-    }
-    
+		return new ResponseEntity<List<Object[]>>(list, HttpStatus.OK);
+	}
 
-	//Transaction && Order
+	// Transaction && Order
 
 	@PostMapping("/order/{pageNumber}")
-    public ResponseEntity<APIResponse<List<TransactionAdminResponse>>> getAllPayments(@PathVariable String pageNumber){
-        	List<Transaction> list = adminService.getAllTransaction(pageNumber);
-			List<TransactionAdminResponse> responsesData = new ArrayList<>();
-			for(Transaction tr : list){
-				TransactionAdminResponse curr = new TransactionAdminResponse();
-				curr.setId(tr.getId());
-				curr.setAmount(tr.getAmount());
-				curr.setAmount_paid(tr.getAmount_paid());
-				curr.setNotes(tr.getNotes());
-				curr.setCreated_at(tr.getCreated_at());
-				curr.setAmount_due(tr.getAmount_due());
-				curr.setCurrency(tr.getCurrency());
-				curr.setReceipt(tr.getReceipt());
-				curr.setEntity(tr.getEntity());
-				curr.setOrder_id(tr.getOrder_id());
-				curr.setOffer_id(tr.getOffer_id());
-				curr.setStatus(tr.getStatus());
-				curr.setAttempts(tr.getAttempts());
-				curr.setPaymentId(tr.getPaymentId());
-				curr.setUser_id(tr.getUser().getId());
-				curr.setUser_phoneNumber(String.valueOf(tr.getUser().getPhoneNumber()));
-				curr.setUser_name(tr.getUser().getName());
-				curr.setUser_emailId(tr.getUser().getEmailId());
-				curr.setUsername(tr.getUser().getUsername());
+	public ResponseEntity<APIResponse<List<TransactionAdminResponse>>> getAllPayments(@PathVariable String pageNumber) {
+		List<Transaction> list = adminService.getAllTransaction(pageNumber);
+		List<TransactionAdminResponse> responsesData = new ArrayList<>();
+		for (Transaction tr : list) {
+			TransactionAdminResponse curr = new TransactionAdminResponse();
+			curr.setId(tr.getId());
+			curr.setAmount(tr.getAmount());
+			curr.setAmount_paid(tr.getAmount_paid());
+			curr.setNotes(tr.getNotes());
+			curr.setCreated_at(tr.getCreated_at());
+			curr.setAmount_due(tr.getAmount_due());
+			curr.setCurrency(tr.getCurrency());
+			curr.setReceipt(tr.getReceipt());
+			curr.setEntity(tr.getEntity());
+			curr.setOrder_id(tr.getOrder_id());
+			curr.setOffer_id(tr.getOffer_id());
+			curr.setStatus(tr.getStatus());
+			curr.setAttempts(tr.getAttempts());
+			curr.setPaymentId(tr.getPaymentId());
+			curr.setUser_id(tr.getUser().getId());
+			curr.setUser_phoneNumber(String.valueOf(tr.getUser().getPhoneNumber()));
+			curr.setUser_name(tr.getUser().getName());
+			curr.setUser_emailId(tr.getUser().getEmailId());
+			curr.setUsername(tr.getUser().getUsername());
 
-				responsesData.add(curr);
-			}
-        	
-        	return new ResponseEntity<APIResponse<List<TransactionAdminResponse>>>(new APIResponse<>("200",responsesData,"OK"),HttpStatus.OK);
-        
-    }
+			responsesData.add(curr);
+		}
+
+		return new ResponseEntity<APIResponse<List<TransactionAdminResponse>>>(
+				new APIResponse<>("200", responsesData, "OK"), HttpStatus.OK);
+
+	}
+
+	@PostMapping("/order/id/{id}")
+	public ResponseEntity<APIResponse<TransactionAdminResponse>> getTransactionById(@PathVariable long id) {
+
+		Transaction tr = adminService.getTransactionById(id);
+		TransactionAdminResponse curr = new TransactionAdminResponse();
+		curr.setId(tr.getId());
+		curr.setAmount(tr.getAmount());
+		curr.setAmount_paid(tr.getAmount_paid());
+		curr.setNotes(tr.getNotes());
+		curr.setCreated_at(tr.getCreated_at());
+		curr.setAmount_due(tr.getAmount_due());
+		curr.setCurrency(tr.getCurrency());
+		curr.setReceipt(tr.getReceipt());
+		curr.setEntity(tr.getEntity());
+		curr.setOrder_id(tr.getOrder_id());
+		curr.setOffer_id(tr.getOffer_id());
+		curr.setStatus(tr.getStatus());
+		curr.setAttempts(tr.getAttempts());
+		curr.setPaymentId(tr.getPaymentId());
+		curr.setUser_id(tr.getUser().getId());
+		curr.setOrderedProduct(tr.getOrderedProduct().size());
+		curr.setUser_phoneNumber(String.valueOf(tr.getUser().getPhoneNumber()));
+		curr.setUser_name(tr.getUser().getName());
+		curr.setUser_emailId(tr.getUser().getEmailId());
+		curr.setUsername(tr.getUser().getUsername());
+
+		
+		return new ResponseEntity<APIResponse<TransactionAdminResponse>>(
+				new APIResponse<>("200",curr, "OK"), HttpStatus.OK);
+
+	}
 
 
-	        	// List<TransactionResponse> response = new ArrayList<>();
-        	// for(Transaction tr : list) {
-        	// 	String status = tr.getStatus();
-        	// 	Date orderTime = tr.getCreated_at();
-        	// 	String transactionId = tr.getOrder_id();
-        		
-        	// 	for(Product p : tr.getOrderedProduct()) {
-        	// 		TransactionResponse tResponse = new TransactionResponse();
-        	// 		tResponse.setImageName(p.getImages().get(0));
-        	// 		tResponse.setProductId(String.valueOf(p.getProductId()));
-        	// 		tResponse.setProductName(p.getName());
-        	// 		tResponse.setOrderTime(orderTime);
-        	// 		tResponse.setPaymentStatus(status);
-        	// 		tResponse.setTransactionId(transactionId);
-        			
-        	// 		response.add(tResponse);
-        	// 	}
-        	// }
-    
+	// feedback
+	@PostMapping("/feedback/{pageNumber}")
+	public ResponseEntity<APIResponse<List<Feedback>>> getAllFeedback(@PathVariable int pageNumber) {
+
+		List<Feedback> list = adminService.getAllFeedbacks(pageNumber);
+		
+		return new ResponseEntity<APIResponse<List<Feedback>>>(
+				new APIResponse<>("200",list, "OK"), HttpStatus.OK);
+
+	}
+
+
+	// help
+	@PostMapping("/help/{pageNumber}")
+	public ResponseEntity<APIResponse<List<Help>>> getAllHelResponseEntity(@PathVariable int pageNumber) {
+
+		List<Help> list = adminService.getAllHelp(pageNumber);
+		
+		return new ResponseEntity<APIResponse<List<Help>>>(
+				new APIResponse<>("200",list, "OK"), HttpStatus.OK);
+
+	}
+
+
+
 }

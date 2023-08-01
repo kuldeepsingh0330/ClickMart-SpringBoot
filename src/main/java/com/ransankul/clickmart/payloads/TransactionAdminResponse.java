@@ -28,8 +28,7 @@ public class TransactionAdminResponse {
     private String user_name;
     private String user_emailId;
     private String username;
-    
-    private List<Product> orderedProduct = new ArrayList<>();
+    private int orderedProduct;
 
     
     
@@ -200,11 +199,11 @@ public class TransactionAdminResponse {
         this.paymentId = paymentId;
     }
 
-    public List<Product> getOrderedProduct() {
+    public int getOrderedProduct() {
         return orderedProduct;
     }
 
-    public void setOrderedProduct(List<Product> orderedProduct) {
+    public void setOrderedProduct(int orderedProduct) {
         this.orderedProduct = orderedProduct;
     }
 

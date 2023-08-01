@@ -7,7 +7,123 @@
 </head>
 <body>
     <section>
-        <h1>This is Order Page</h1>
+
+      <div class="container text-center mt-3"><h3>Exixting Orders</h3></div>
+
+          <div class="container mt-3">
+            <table class="table table-hover text-center">
+                <thead>
+                    <tr>
+                      <th scope="col">Username</th>
+                      <th scope="col">Order ID</th>
+                      <th scope="col">Amount</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Payment ID</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTableBody" style="cursor: pointer;">
+                </tbody>
+              </table>
+          </div>
+
+          <div class="text-center m-3 ">
+            <h5 id="loadMore">Load More</h5>
+          </div>
+
+
+
+          <div class="popup-form" id="popupForm">
+            <div class="form-container">
+              <div id="closeButtonDiv"><img id="closeform" src="/img/close.png"
+                  style="cursor: pointer; height: 20px; width: 20px	;" /></div>
+              <div class="container">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title m-3 text-center" style="font-weight: bold; color: #ff5722;">Order Detail</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="label">Order Id :</div>
+                            <div class="value" id="orderId"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Amount :</div>
+                            <div class="value" id="amount"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Amount Paid :</div>
+                            <div class="value" id="amountPaid"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Notes :</div>
+                            <div class="value" id="notes"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Created At :</div>
+                            <div class="value" id="createdAt"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Amount Due :</div>
+                            <div class="value" id="amountDue"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Currency :</div>
+                            <div class="value" id="currency"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Receipt :</div>
+                            <div class="value" id="receipt"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Entity :</div>
+                            <div class="value" id="entity"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Offer Id :</div>
+                            <div class="value" id="offerId"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Status :</div>
+                            <div class="value" id="status"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Attempts :</div>
+                            <div class="value" id="attempts"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Payment ID :</div>
+                            <div class="value" id="paymentId"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">User ID :</div>
+                            <div class="value" id="userId"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">User Phone Number :</div>
+                            <div class="value" id="userPhoneNumber"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">User Name :</div>
+                            <div class="value" id="userName"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">User Email :</div>
+                            <div class="value" id="userEmail"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Username :</div>
+                            <div class="value" id="username"></div>
+                          </li>
+                          <li class="list-group-item">
+                            <div class="label">Number of Ordered Products :</div>
+                            <div class="value" id="orderedProducts"></div>
+                          </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>      
+            </div>
+          </div>
+
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="/javascript/order.js"></script>

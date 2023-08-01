@@ -3,6 +3,8 @@ package com.ransankul.clickmart.service;
 import java.util.List;
 
 import com.ransankul.clickmart.model.Category;
+import com.ransankul.clickmart.model.Feedback;
+import com.ransankul.clickmart.model.Help;
 import com.ransankul.clickmart.model.Product;
 import com.ransankul.clickmart.model.Transaction;
 
@@ -29,6 +31,7 @@ public interface AdminService {
 	public Product updateProduct(Product updatedProduct);
 
 	public List<Transaction> getAllTransaction(String pageNumber);
+	public Transaction getTransactionById(long id);
 	
 
 	public Category getCategoryByID(int categoryId);
@@ -45,4 +48,11 @@ public interface AdminService {
 	public boolean changeProductAvailibality(int productId);
 	public boolean addMoreProductQuantity(int productId,int quantity);
 
+
+
+	// feedback
+	public List<Feedback> getAllFeedbacks(int pageNumber);
+
+	//Help
+	public List<Help> getAllHelp(int pageNumber);
 }

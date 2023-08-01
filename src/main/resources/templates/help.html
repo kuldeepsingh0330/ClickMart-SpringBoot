@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org" th:replace="b~{base::baselayout(~{::section})}">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" th:replace="~{base::baselayout(~{::section})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,22 @@
 </head>
 <body>
     <section>
-        <h1>This is Help Page</h1>
+
+        
+        <div class="text-center m-3 ">
+
+
+            <div class="accordion" id="accordionExample">
+
+            </div>
+
+
+            <h5 id="loadMore">Load More</h5>
+          </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/javascript/help.js"></script>
     </section>
 </body>
 </html>
