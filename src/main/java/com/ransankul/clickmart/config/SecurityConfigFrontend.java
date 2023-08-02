@@ -8,6 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,73 +28,52 @@ import com.ransankul.clickmart.security.JWTAuthFilter;
 import com.ransankul.clickmart.security.JWTauthEntryPoint;
 
 
-
 @Configuration
 @EnableWebSecurity
-@Order(1)
-public class SecurityConfig implements AuthenticationProvider {
+@Order(2)
+public class SecurityConfigFrontend {
 
-
-    @Autowired
-    private JWTAuthFilter jwtauthFilter;
-    
-    @Autowired
-    private JWTauthEntryPoint jwTauthEntryPoint;
-    
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
-
-    private static final String[] PUBLIC_URL = {
-        "/auth/**","/v3/api-docs","/v2/api-docs","/swagger-resources/**","/swagger-ui/**","webjars/**"
-        ,"/register","/validate"
-    };
-
 
     @Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    
-	    http.csrf(csrf-> csrf.disable()).cors(cors-> cors.disable())
+	    http.securityMatcher("/admin/**").csrf(csrf-> csrf.disable())
         .authorizeHttpRequests(auth-> auth
-        		.requestMatchers(HttpMethod.GET).permitAll()
-        		.requestMatchers(PUBLIC_URL).permitAll()
+        		.requestMatchers("/admin/login").permitAll()
+        		.requestMatchers("/admin/redirect").permitAll()
+        		.requestMatchers("/admin/login/token").permitAll()
+        		.requestMatchers("/admin/**").authenticated()
         		.anyRequest().authenticated())
-        .exceptionHandling(ex->ex.authenticationEntryPoint(jwTauthEntryPoint))
-        .sessionManagement(sm->sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(jwtauthFilter,UsernamePasswordAuthenticationFilter.class);
+                .formLogin((form) -> form
+				.loginPage("/admin/login")
+                .loginProcessingUrl("/admin/login/token")
+                .defaultSuccessUrl("/admin/category")
+				.permitAll()
+			)
+			.logout((logout) -> logout.permitAll());
 
         return http.build();
 	}
 
-
-	// Authenticate the requested user
-    @Override
-    public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
-        final String username = authentication.getName();
-        final String password = authentication.getCredentials().toString();
-        final UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-        if (userDetails.getPassword().equals(password)) {
-            return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
-        } else {
-            throw new ResourceNotFoundException("incorrect password");
-        }
-    }
+    
 
 
-
-    @Override
-    public boolean supports(final Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
-    }    
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
+        return daoAuthenticationProvider;
     }
 
-    // @Bean
-    // public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
-    //     return builder.getAuthenticationManager();
-    // }
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = 
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
+        return authenticationManagerBuilder.build();
+    }
 
 }
-

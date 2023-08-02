@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties.Authentication;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,6 +61,7 @@ import com.ransankul.clickmart.service.TransactionService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -73,21 +76,18 @@ public class AdminController {
 	private UserDetailsService userDetailsService;
 
 	@Autowired
-	private AuthenticationManager manager;
+	private JWTTokenHelper jwtTokenHelper;
 
 	@Autowired
-	private JWTTokenHelper jwtTokenHelper;
+	private BCryptPasswordEncoder bcrypt;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private ObjectMapper mapper;
 	@Value("${project.image}")
 	private String path;
-
-	@RequestMapping("/home")
-	public String home(Model m) {
-		m.addAttribute("title", "Home - ClickMart");
-		return "/home";
-	}
 
 	@RequestMapping("/login")
 	public String login(Model m) {
@@ -125,45 +125,30 @@ public class AdminController {
 		return "feedback";
 	}
 
-	@RequestMapping("/help")
-	public String help(Model m) {
-		m.addAttribute("title", "Help - ClickMart");
-		return "help";
-	}
-
 	// vallidation
 
 	@RequestMapping(path = "/login/token", method = RequestMethod.POST)
-	public String login(HttpServletRequest request, Model m, HttpServletResponse response) {
+	public String login(@RequestParam("username") String username,
+			@RequestParam("password") String password,
+			HttpServletResponse response,
+			Model m) {
 
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		this.doAuthenticate(username, password);
+		UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		// Create JWT token and set it as a cookie
 		String token = this.jwtTokenHelper.generateToken(userDetails);
 		Cookie c = new Cookie("JWTtoken", token);
 		c.setMaxAge(-1);
 		c.setPath("/");
 		response.addCookie(c);
-
-		return "redirect:/admin/redirect";
-	}
-
-	@RequestMapping(path = "/redirect")
-	public String redirect(HttpServletRequest request) {
 		return "redirect";
 	}
 
-	private void doAuthenticate(String username, String password) {
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username,
-				password);
-		try {
-			manager.authenticate(authentication);
-		} catch (BadCredentialsException e) {
-			throw new RuntimeException("Invalid username and password");
-		}
+	@RequestMapping("/redirect")
+	public String redirect() {
+		return "redirect";
 	}
+
 
 	@PostMapping("/category/{categoryId}")
 	public ResponseEntity<Category> getCategoryByID(@PathVariable int categoryId) {
@@ -456,36 +441,31 @@ public class AdminController {
 		curr.setUser_emailId(tr.getUser().getEmailId());
 		curr.setUsername(tr.getUser().getUsername());
 
-		
 		return new ResponseEntity<APIResponse<TransactionAdminResponse>>(
-				new APIResponse<>("200",curr, "OK"), HttpStatus.OK);
+				new APIResponse<>("200", curr, "OK"), HttpStatus.OK);
 
 	}
-
 
 	// feedback
 	@PostMapping("/feedback/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Feedback>>> getAllFeedback(@PathVariable int pageNumber) {
 
 		List<Feedback> list = adminService.getAllFeedbacks(pageNumber);
-		
+
 		return new ResponseEntity<APIResponse<List<Feedback>>>(
-				new APIResponse<>("200",list, "OK"), HttpStatus.OK);
+				new APIResponse<>("200", list, "OK"), HttpStatus.OK);
 
 	}
-
 
 	// help
 	@PostMapping("/help/{pageNumber}")
 	public ResponseEntity<APIResponse<List<Help>>> getAllHelResponseEntity(@PathVariable int pageNumber) {
 
 		List<Help> list = adminService.getAllHelp(pageNumber);
-		
+
 		return new ResponseEntity<APIResponse<List<Help>>>(
-				new APIResponse<>("200",list, "OK"), HttpStatus.OK);
+				new APIResponse<>("200", list, "OK"), HttpStatus.OK);
 
 	}
-
-
 
 }

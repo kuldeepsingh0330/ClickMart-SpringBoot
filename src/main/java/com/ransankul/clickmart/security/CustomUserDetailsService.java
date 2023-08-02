@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = this.userRepositery.findByUserName(username);
         if(user == null){
-            throw new ResourceNotFoundException("User not found with thid username "+username); 
+            throw new ResourceNotFoundException("User not found with this username "+username); 
         }   
 
         return user;

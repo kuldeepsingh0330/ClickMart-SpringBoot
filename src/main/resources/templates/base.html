@@ -15,25 +15,24 @@
     <nav class="navbarC" style="background-color: #FF5722;">
       <div class="navBarDiv">
         <img src="/img/logo.jpg" alt="logo">
-        <a href="/home">CLICKMART</a>
+        <a href="/admin/category">CLICKMART</a>
       </div>
     </nav>
 
     <!-- content -->
-
-    <div class="sidebarmenu">
-      <a href="/admin/home" class="item"> <i class="fa-solid fa-house" style="color: #ff5722;"></i> DASHBOARD</a>
-      <a href="/admin/category" class="item"> <i class="fa-solid fa-list" style="color: #ff5722;"></i> CATEGORIES</a>
-      <a href="/admin/product" class="item"> <i class="fa-solid fa-boxes-stacked" style="color: #ff5722;"></i> PRODUCTS</a>
-      <a href="/admin/order" class="item"> <i class="fa-solid fa-money-check-dollar" style="color: #ff5722;"></i> ORDERS</a>
-      <a href="/admin/feedback" class="item"> <i class="fa-solid fa-comment" style="color: #ff5722;"></i> FEEDBACK</a>      
-      <a href="/admin/help" class="item"> <i class="fa-solid fa-circle-exclamation" style="color: #ff5722;"></i> HELP</a>      
+    <div class="mt-5">
+      <div class="sidebarmenu">
+        <a href="/admin/category" class="item"> <i class="fa-solid fa-list" style="color: #ff5722;"></i> CATEGORIES</a>
+        <a href="/admin/product" class="item"> <i class="fa-solid fa-boxes-stacked" style="color: #ff5722;"></i> PRODUCTS</a>
+        <a href="/admin/order" class="item"> <i class="fa-solid fa-money-check-dollar" style="color: #ff5722;"></i> ORDERS</a>
+        <a href="/admin/feedback" class="item"> <i class="fa-solid fa-comment" style="color: #ff5722;"></i> FEEDBACK</a>      
       <div class="divider"></div>     
-      <a id="logoutNav" class="item"> <i class="fa-solid fa-right-from-bracket" style="color: #ff5722;"></i> LOG OUT</a> 
-    </div>
-
-    <div class="content">
-      <div th:replace="${content}"></div>
+        <a id="logoutNav" class="item"> <i class="fa-solid fa-right-from-bracket" style="color: #ff5722;"></i> LOG OUT</a> 
+      </div>
+  
+      <div class="content">
+        <div th:replace="${content}"></div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
