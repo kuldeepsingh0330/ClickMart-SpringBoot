@@ -35,21 +35,24 @@ $(document).ready(function() {
 
 document.getElementById("logoutNav").addEventListener("click",logout);
 function logout(){
+    
+    console.log("data");
 
     const jwtToken = getCookie("JWTtoken");
 
     // Make the API call with the JWT token in the headers
     fetch("/admin/logout", {
-        method: "GET",
+        method: "POST",
         headers: {
             "Authorization": "Bearer " + jwtToken,
         },
     })
         .then((data) => {
+            console.log(data);
             window.location.href = data.url
         })
         .catch((error) => {
-            console.error("Error:", error);
+            alert("Logout failed. Please try again.");           
         });
 	
 }

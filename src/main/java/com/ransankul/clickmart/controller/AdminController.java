@@ -66,7 +66,6 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin")
-// @PreAuthorize("hasRole('ROLE_ADMIN_USER')")
 public class AdminController {
 
 	@Autowired
@@ -86,46 +85,12 @@ public class AdminController {
 
 	@Autowired
 	private ObjectMapper mapper;
+	
 	@Value("${project.image}")
 	private String path;
 
-	@RequestMapping("/login")
-	public String login(Model m) {
-		m.addAttribute("title", "Login - ClickMart");
-		return "login";
-	}
 
-	@RequestMapping("/category")
-	public String category(Model m) {
-		m.addAttribute("totalCategory", "50");
-		m.addAttribute("title", "Categoey - ClickMart");
-		m.addAttribute("count", adminService.getCount());
-		m.addAttribute("countPublic", adminService.getCountPublic());
-		m.addAttribute("countPrivate", adminService.getCountPrivate());
-		return "category";
-	}
-
-	@RequestMapping("/product")
-	public String product(Model m) {
-		m.addAttribute("title", "Product - ClickMart");
-		m.addAttribute("count", adminService.getCountProduct());
-		m.addAttribute("outofstock", adminService.getCountoutOfStockProduct());
-		return "product";
-	}
-
-	@RequestMapping("/order")
-	public String order(Model m) {
-		m.addAttribute("title", "Order - ClickMart");
-		return "order";
-	}
-
-	@RequestMapping("/feedback")
-	public String feedback(Model m) {
-		m.addAttribute("title", "Feedback - ClickMart");
-		return "feedback";
-	}
-
-	// vallidation
+		// vallidation
 
 	@RequestMapping(path = "/login/token", method = RequestMethod.POST)
 	public String login(@RequestParam("username") String username,
@@ -136,19 +101,14 @@ public class AdminController {
 		UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
 		// Create JWT token and set it as a cookie
+		if(!userDetails.getPassword().equals(password)) return "redirect:/admin/login";
 		String token = this.jwtTokenHelper.generateToken(userDetails);
 		Cookie c = new Cookie("JWTtoken", token);
 		c.setMaxAge(-1);
 		c.setPath("/");
 		response.addCookie(c);
-		return "redirect";
+		return "redirect:/admin/redirect";
 	}
-
-	@RequestMapping("/redirect")
-	public String redirect() {
-		return "redirect";
-	}
-
 
 	@PostMapping("/category/{categoryId}")
 	public ResponseEntity<Category> getCategoryByID(@PathVariable int categoryId) {

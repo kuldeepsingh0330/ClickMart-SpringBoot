@@ -377,9 +377,16 @@ $(document).ready(function () {
         'Authorization': 'Bearer ' + jwtToken
       },
       success: function (response) {
-        if (response.statusCode == "200") {
-          data = response.data;
-          if (data.length < 20) document.getElementById("loadMore").style.display = "none";
+        data = response.data;
+        if (response.statusCode == "201") document.getElementById("loadMore").style.display = "none";
+        else if(data.length < 20){
+          document.getElementById("loadMore").style.display = "none";
+          createCards();
+          listItems = document.querySelectorAll(".openFormBtn");
+          addClickListnerOnShoeDetails();
+          if (id != -1) document.getElementById(id).focus();
+        }
+        else if (response.statusCode == "200") {
           createCards();
           listItems = document.querySelectorAll(".openFormBtn");
           addClickListnerOnShoeDetails();
@@ -389,7 +396,6 @@ $(document).ready(function () {
       },
       error: function (error) {
         console.error('Error making POST request:', error);
-        // Handle any errors that occurred during the request
       }
     });
   }

@@ -17,8 +17,8 @@
       <div class="card">
         <div class="card-body">
           <h3 class="card-title text-center" style="color: #FF5722;">Log in</h3>
-          <div th:if="${param.error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
-          <div th:if="${param.logout}" class="alert alert-success" role="alert" th:text="${error}"></div>
+          <div th:if="${param.error}" class="alert alert-danger text-center" role="alert" >Invalid Username Password</div>
+          <div th:if="${param.logout}" class="alert alert-success text-center" role="alert" >Log out successfully</div>
           <form  action="/admin/login/token" method="post">
             <div class="mb-3">
               <label for="inputEmail" class="form-label" >Username</label>
