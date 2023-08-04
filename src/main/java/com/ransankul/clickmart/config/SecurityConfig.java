@@ -7,7 +7,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,9 +27,7 @@ import com.ransankul.clickmart.security.JWTauthEntryPoint;
 
 
 @Configuration
-@EnableWebMvc
 @EnableWebSecurity
-@Order(1)
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig implements AuthenticationProvider {
 
@@ -45,8 +42,7 @@ public class SecurityConfig implements AuthenticationProvider {
     private CustomUserDetailsService customUserDetailsService;
 
     private static final String[] PUBLIC_URL = {
-        "/auth/**","/v3/api-docs","/v2/api-docs","/swagger-resources/**","/swagger-ui/**","webjars/**"
-        ,"/register","/validate"
+        "/auth/**","/register","/validate"
     };
 
 
@@ -90,11 +86,6 @@ public class SecurityConfig implements AuthenticationProvider {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    // @Bean
-    // public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
-    //     return builder.getAuthenticationManager();
-    // }
 
 }
 
