@@ -37,8 +37,7 @@ public class UserController {
     private String path;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {  
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));  	
+    public ResponseEntity<String> registerUser(@RequestBody User user) {   	
         User createdUser = userServiceImpl.registerUser(user);
         return ResponseEntity.ok("User registered successfully with ID: " + createdUser.getId());
     }

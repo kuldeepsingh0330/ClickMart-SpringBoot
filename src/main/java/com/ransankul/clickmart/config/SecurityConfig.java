@@ -17,8 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.security.CustomUserDetailsService;
 import com.ransankul.clickmart.security.JWTAuthFilter;
@@ -29,6 +27,7 @@ import com.ransankul.clickmart.security.JWTauthEntryPoint;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@Order(1)
 public class SecurityConfig implements AuthenticationProvider {
 
 
@@ -68,7 +67,8 @@ public class SecurityConfig implements AuthenticationProvider {
         final String username = authentication.getName();
         final String password = authentication.getCredentials().toString();
         final UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-        if (userDetails.getPassword().equals(password)) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = passwordEncoder();
+        if (bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
             return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
         } else {
             throw new ResourceNotFoundException("incorrect password");

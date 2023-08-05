@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,12 +25,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepositery userRepositery;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Override
     public User registerUser(User user) {
-    	System.out.println("registeruser");
     	Set<Roles> set = new HashSet<>();
     	set.add(new Roles(2,"ROLE_NORMAL_USER"));
     	user.setRoles(set);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword())); 
         User createdUser = userRepositery.save(user);
         return createdUser;
     }
@@ -37,10 +41,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean valiateUser(String userName, String password) {
         
-        // System.out.println("-------------------------------------------");
         User user = userRepositery.findByUserName(userName);
-        if (user != null && user.getPassword().equals(password)) {
-            return true;
+        if (user != null) {
+            return bCryptPasswordEncoder.matches(password, user.getPassword());
         }
         return false;
     }
