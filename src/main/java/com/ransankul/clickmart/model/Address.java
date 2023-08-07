@@ -37,7 +37,7 @@ public class Address {
     @Column(name = "country")
     private String country;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
     

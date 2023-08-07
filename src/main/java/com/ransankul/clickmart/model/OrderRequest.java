@@ -2,11 +2,13 @@ package com.ransankul.clickmart.model;
 
 import java.util.List;
 
+import com.ransankul.clickmart.payloads.AddressResponse;
+
 public class OrderRequest {
 	
     private List<Integer> productList;
     private List<Integer> quantityList;
-    private Address deliveryAddress;
+    private AddressResponse deliveryAddress;
 	
 	
 	public OrderRequest() {
@@ -14,7 +16,7 @@ public class OrderRequest {
 	}
 
 
-	public OrderRequest(List<Integer> productList, List<Integer> quantityList, Address deliveryAddress) {
+	public OrderRequest(List<Integer> productList, List<Integer> quantityList, AddressResponse deliveryAddress) {
 		super();
 		this.productList = productList;
 		this.quantityList = quantityList;
@@ -42,12 +44,12 @@ public class OrderRequest {
 	}
 
 
-	public Address getDeliveryAddress() {
+	public AddressResponse getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
 
-	public void setDeliveryAddress(Address deliveryAddress) {
+	public void setDeliveryAddress(AddressResponse deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ransankul.clickmart.model.User;
+import com.ransankul.clickmart.payloads.UserPayload;
 import com.ransankul.clickmart.serviceImpl.UserServiceImpl;
 
 @RestController
@@ -37,9 +38,10 @@ public class UserController {
     private String path;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {   	
+    public ResponseEntity<String> registerUser(@RequestBody UserPayload userpPayload) {
+        User user = new User(userpPayload.getUserId(), userpPayload.getPhoneNumber(), userpPayload.getName(), userpPayload.getPassword(), userpPayload.getEmailId(),"",userpPayload.getUserName(), null);  	
         User createdUser = userServiceImpl.registerUser(user);
-        return ResponseEntity.ok("User registered successfully with ID: " + createdUser.getId());
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/validate")
@@ -51,48 +53,5 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
         }
     }
-
-    @PostMapping("/upload_profile_picture/{username}")
-    public ResponseEntity<String> uploadImage(@RequestParam("profile_picture") MultipartFile file, @PathVariable("username") String username ) {
-
-        User user = userServiceImpl.finduserByUsername(username);
-        String fname = "";
-        if(user != null){
-
-            try{    
-                fname = userServiceImpl.uploadprofileImage(path, file,username);
-                return ResponseEntity.ok("Image uploaded succesfully."+fname);
-            }catch(Exception e){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");                
-            }
-
-        }
-
-        else
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("please check the user name");
-    
-    }
-
-    @GetMapping("/profile_image/{username}")
-    public ResponseEntity<Resource> serveImage(@PathVariable String username) throws IOException {
-
-        User user =  userServiceImpl.finduserByUsername(username);
-        if(user != null){
-            String folderPath = path;
-            Path imagePath = Paths.get(folderPath).resolve(user.getProfilePic());
-            Resource imageResource = new UrlResource(imagePath.toUri());
-
-            if (imageResource.exists() && imageResource.isReadable()) {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.IMAGE_JPEG); 
-            
-                return ResponseEntity.ok().headers(headers).body(imageResource);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        }else
-            return ResponseEntity.badRequest().build();
-    }
-
     
 }

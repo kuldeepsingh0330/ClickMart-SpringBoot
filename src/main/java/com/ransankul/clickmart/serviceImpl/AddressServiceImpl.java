@@ -27,9 +27,8 @@ public class AddressServiceImpl implements AddressService {
 
 
     @Override
-    public List<Address> getAddressByUserId(User user,String pageNumber) {
-    	Pageable p = PageRequest.of(Integer.parseInt(pageNumber), 7);
-        return addressRepositery.findByuser(user,p);
+    public List<Address> getAddressByUserId(User user) {
+        return addressRepositery.findByuser(user);
     }
 
 

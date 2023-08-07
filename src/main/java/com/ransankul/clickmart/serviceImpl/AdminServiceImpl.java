@@ -19,6 +19,7 @@ import com.ransankul.clickmart.repositery.FeedbackRepositery;
 import com.ransankul.clickmart.repositery.HelpRepositery;
 import com.ransankul.clickmart.repositery.ProductRepositery;
 import com.ransankul.clickmart.repositery.TransactionRepositery;
+import com.ransankul.clickmart.repositery.WishlistRepositery;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -37,6 +38,10 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private HelpRepositery helpRepositery;
+
+	@Autowired
+	private WishlistRepositery wishlistRepositery;
+
 
 	@Override
 	public List<Category> getCategory(int pageNumber) {
@@ -103,6 +108,7 @@ public class AdminServiceImpl implements AdminService {
 			throw new IllegalArgumentException("Product does not exist");
 		} else {
 			productRepositery.delete(product);
+			wishlistRepositery.removeEntityWhichNotWxist(productId);
 		}
 
 	}

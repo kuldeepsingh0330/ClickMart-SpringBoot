@@ -8,7 +8,7 @@ public interface WishlistService {
 	
 	public Wishlist addProductToWishlist(Wishlist wishlist);
 
-	public void removeProductToWishlist(int id);
+	public void removeProductToWishlist(int userId,int productId);
 	
 	public Wishlist getById(int id);
 	
@@ -16,6 +16,6 @@ public interface WishlistService {
 	
 	public boolean isProductintoWishList(int userId,int productId);
 	
-	public int getWishListId(int userId,int productId);
+	public Wishlist getWishListId(int userId,int productId);
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ransankul.clickmart.exception.ResourceNotFoundException;
@@ -27,6 +28,7 @@ import com.ransankul.clickmart.security.JWTTokenHelper;
 import com.ransankul.clickmart.service.AddressService;
 import com.ransankul.clickmart.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
@@ -44,13 +46,14 @@ public class AddressController {
     private JWTTokenHelper jwtTokenHelper;
     
     @PostMapping("/")
-    public ResponseEntity<APIResponse<AddressResponse>> addAddress(@Valid @RequestBody Address address, HttpServletRequest request) {
+    public ResponseEntity<APIResponse<AddressResponse>> addAddress(@Valid @RequestBody AddressResponse addressResponse, HttpServletRequest request) {
     	
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             String userName = jwtTokenHelper.extractUsername(token);
         	User user = userService.finduserByUsername(userName);
+            Address address = new Address(addressResponse.getAddressId(), addressResponse.getStreet(), addressResponse.getCity(), addressResponse.getState(), addressResponse.getPostalCode(), addressResponse.getCountry());
         	address.setUser(user);
             Address ad = addressService.addAddress(address);
             AddressResponse response = new AddressResponse(ad.getAddressId(),
@@ -91,13 +94,14 @@ public class AddressController {
     }
 
     @PutMapping("/updateAddress")
-    public ResponseEntity<APIResponse<AddressResponse>> updateAddress(@Valid @RequestBody Address address, HttpServletRequest request) {
+    public ResponseEntity<APIResponse<AddressResponse>> updateAddress(@Valid @RequestBody AddressResponse addressResponse, HttpServletRequest request) {
     	
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             String userName = jwtTokenHelper.extractUsername(token);
         	User user = userService.finduserByUsername(userName);
+            Address address = new Address(addressResponse.getAddressId(), addressResponse.getStreet(), addressResponse.getCity(), addressResponse.getState(), addressResponse.getPostalCode(), addressResponse.getCountry());
         	address.setUser(user);
         	Address ad = addressService.updateAddress(address);
             AddressResponse response = new AddressResponse(ad.getAddressId(),
@@ -113,16 +117,16 @@ public class AddressController {
         
     }
 
-    
-    @PostMapping("/allAddress/{pageNumber}")
-    public ResponseEntity<APIResponse<List<AddressResponse>>> getAddressByUserId(@PathVariable String pageNumber,HttpServletRequest request) {
+
+    @PostMapping("/allAddress")
+    public ResponseEntity<APIResponse<List<AddressResponse>>> getAddressByUserId(HttpServletRequest request) {
     	
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             String userName = jwtTokenHelper.extractUsername(token);
         	User user = userService.finduserByUsername(userName);
-            List<Address> addresses = addressService.getAddressByUserId(user,pageNumber);
+            List<Address> addresses = addressService.getAddressByUserId(user);
             
             if(addresses.size()>0) {
             	List<AddressResponse> addressesPayload = new ArrayList<>();

@@ -76,8 +76,6 @@ public class PaymentController {
         	}
         	
         	int price = (int)Math.round(prices);
-        	System.out.println(price);
-        	System.out.println(prices);
             
         	RazorpayClient razorpayClient = new RazorpayClient(keyId, keySecret);
         	JSONObject obj = new JSONObject();

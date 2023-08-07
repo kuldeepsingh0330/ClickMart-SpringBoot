@@ -141,7 +141,7 @@ $(document).ready(function () {
             orderIDCell.textContent = transaction.order_id;
 
             const amountCell = document.createElement("td");
-            amountCell.textContent = `INR ${transaction.amount.toFixed(2)}`;
+            amountCell.textContent = `INR ${transaction.amount.toFixed(2)/100}`;
 
             const statusCell = document.createElement("td");
             if (transaction.status === "paid") {

@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ransankul.clickmart.model.Product;
 import com.ransankul.clickmart.model.User;
 import com.ransankul.clickmart.model.Wishlist;
 import com.ransankul.clickmart.repositery.WishlistRepositery;
@@ -25,10 +26,9 @@ public class WishlistServiceImpl implements WishlistService{
 	}
 
 	@Override
-	public void removeProductToWishlist(int id) {
-		Wishlist w = new Wishlist();
-		w.setId(id);
-		wishlistRepositery.delete(w);		
+	public void removeProductToWishlist(int userId, int p) {
+		Wishlist w = this.getWishListId(userId, p);
+		wishlistRepositery.deleteWishlistById(w.getId());		
 	}
 
 	@Override
@@ -53,10 +53,10 @@ public class WishlistServiceImpl implements WishlistService{
 	}
 
 	@Override
-	public int getWishListId(int userId, int productId) {
+	public Wishlist getWishListId(int userId, int productId) {
 		User user = new User();
 		user.setId(userId);
-		return wishlistRepositery.isProductintoWishList(productId, user).get(0).getId();
+		return wishlistRepositery.isProductintoWishList(productId, user).get(0);
 	}
 
 }

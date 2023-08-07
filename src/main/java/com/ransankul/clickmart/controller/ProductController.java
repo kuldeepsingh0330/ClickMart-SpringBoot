@@ -132,14 +132,16 @@ public class ProductController {
     }
     
     
-    @PostMapping("wishlist/add")
-    public ResponseEntity<APIResponse<Wishlist>> addProductTOWishlist(@RequestBody Wishlist wishlist, HttpServletRequest request) {
+    @PostMapping("wishlist/add/{pid}")
+    public ResponseEntity<APIResponse<Wishlist>> addProductTOWishlist(@PathVariable int pid, HttpServletRequest request) {
 
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             String userName = jwtTokenHelper.extractUsername(token);
         	User user = userService.finduserByUsername(userName);
+            Wishlist wishlist = new Wishlist();
+            wishlist.setProductId(pid);
             wishlist.setUser(user);
         	Wishlist w = wishlistService.addProductToWishlist(wishlist);
         	w.setUser(null);
@@ -158,8 +160,7 @@ public class ProductController {
             String token = authorizationHeader.substring(7);
             String userName = jwtTokenHelper.extractUsername(token);
         	User user = userService.finduserByUsername(userName);
-        	int w = wishlistService.getWishListId(user.getId(), id);
-        	wishlistService.removeProductToWishlist(w);
+        	wishlistService.removeProductToWishlist(user.getId(), id);
         	return new ResponseEntity<>(new APIResponse<>("202","","removed successfully"),HttpStatus.ACCEPTED);	
     		
         }else {

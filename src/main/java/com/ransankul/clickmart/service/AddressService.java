@@ -11,7 +11,7 @@ public interface AddressService {
     public Address getAddressById(int addressId);
 
     //getAddressByUserId
-    public List<Address> getAddressByUserId(User user,String pageNumber);
+    public List<Address> getAddressByUserId(User user);
     
     public Address addAddress(Address Address);
     

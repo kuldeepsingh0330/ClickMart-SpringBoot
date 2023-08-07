@@ -9,7 +9,9 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 import com.ransankul.clickmart.exception.ResourceNotFoundException;
 import com.ransankul.clickmart.security.CustomUserDetailsService;
 import com.ransankul.clickmart.security.JWTAuthFilter;
@@ -41,7 +45,7 @@ public class SecurityConfig implements AuthenticationProvider {
     private CustomUserDetailsService customUserDetailsService;
 
     private static final String[] PUBLIC_URL = {
-        "/auth/**","/register","/validate"
+        "/auth/**","/register","/validate","/v3/api-docs","/swagger-ui/**"
     };
 
 
@@ -74,6 +78,7 @@ public class SecurityConfig implements AuthenticationProvider {
             throw new ResourceNotFoundException("incorrect password");
         }
     }
+
 
 
 
