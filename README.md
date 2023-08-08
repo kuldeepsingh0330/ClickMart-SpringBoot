@@ -40,16 +40,16 @@ ClickMart is a Spring Boot-based e-commerce application that allows users to bro
 
 ## Screenshots and Video
 
-## /admin/login
+### /admin/login
 ![login](https://github.com/kuldeepsingh0330/ClickMart-SpringBoot/assets/95225751/55d1831c-1d7c-4c47-aac5-f1672be39055)
 
-## /admin/category
+### /admin/category
 ![HOME](https://github.com/kuldeepsingh0330/ClickMart-SpringBoot/assets/95225751/8c85b432-46cc-4400-8cc1-194f2e107ec3)
 
-## /admin/order
+### /admin/order
 ![orders](https://github.com/kuldeepsingh0330/ClickMart-SpringBoot/assets/95225751/0567fa22-1e64-469d-9530-db3ec16c773c)
 
-## /admin/feedback
+### /admin/feedback
 ![feedback](https://github.com/kuldeepsingh0330/ClickMart-SpringBoot/assets/95225751/ce189b69-97e1-4ed4-897d-3bd584775cf4)
 
 
