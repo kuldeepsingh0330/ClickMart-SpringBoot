@@ -6,7 +6,7 @@
 
 # ClickMart E-Commerce Application
 
-ClickMart is a Spring Boot-based e-commerce application that allows users to browse and purchase products, manage their wishlist, and view recent offers. It provides features for user authentication, category and product management, payment processing, and more. It is a full-stack Ecommerce application developed using Spring Boot for the backend and Android for the frontend. Both JWt authentication and form log-in used in a sigle project of SpringBoot.
+ClickMart is a Spring Boot-based e-commerce application that allows users to browse and purchase products, manage their wishlist, and view recent offers. It provides features for user authentication, category and product management, payment processing, and more. It is a full-stack Ecommerce application developed using Spring Boot for the backend and Android for the frontend. Both JWt authentication and form log-in used in this project of SpringBoot.
 
 ## Table of Contents
 
