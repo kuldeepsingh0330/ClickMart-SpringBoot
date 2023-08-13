@@ -37,6 +37,7 @@ ClickMart is a Spring Boot-based e-commerce application that allows users to bro
 - JPA 
 - JWT (JSON Web Tokens) for authentication
 - Razorpay for payment processing
+- Swagger for API's documentation
 
 ## Screenshots and Video
 
